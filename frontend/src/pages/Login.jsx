@@ -17,13 +17,12 @@ const Login = () => {
 
   // ✅ already logged in
   useEffect(() => {
-    const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
-    if (token) {
-      navigate("/dashboard");
-    }
-  }, [navigate]);
-
+  if (token && window.location.pathname === "/") {
+    navigate("/dashboard", { replace: true });
+  }
+}, [navigate]);
   const handleChange = (e) => {
     setForm({
       ...form,
