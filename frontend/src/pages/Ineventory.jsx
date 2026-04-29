@@ -2,32 +2,71 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+const API = "https://smart-roll-backend.onrender.com";
+
 const Inventory = () => {
   const navigate = useNavigate();
 
   const [items, setItems] = useState([]);
   const [history, setHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const [stats, setStats] = useState({
     total: 0,
     available: 0,
     low: 0,
-    out: 0
+    out: 0,
   });
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(
+    window.innerWidth < 768
+  );
 
+  const token = localStorage.getItem("token");
+
+  // ================= AUTH CHECK =================
   useEffect(() => {
-    fetchFabrics();
-    fetchHistory();
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate, token]);
 
-    const resize = () => setIsMobile(window.innerWidth < 768);
+  // ================= RESIZE =================
+  useEffect(() => {
+    const resize = () =>
+      setIsMobile(window.innerWidth < 768);
+
     window.addEventListener("resize", resize);
-    return () => window.removeEventListener("resize", resize);
+
+    return () =>
+      window.removeEventListener("resize", resize);
   }, []);
 
+  // ================= LOAD DATA =================
+  useEffect(() => {
+    fetchAll();
+  }, []);
+
+  const fetchAll = async () => {
+    setLoading(true);
+    await Promise.all([
+      fetchFabrics(),
+      fetchHistory(),
+    ]);
+    setLoading(false);
+  };
+
+  // ================= FETCH FABRICS =================
   const fetchFabrics = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/fabric");
+      const res = await axios.get(
+        `${API}/api/fabric`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       setItems(res.data);
 
@@ -45,190 +84,205 @@ const Inventory = () => {
         total: res.data.length,
         available,
         low,
-        out
+        out,
       });
-
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
   };
 
+  // ================= FETCH HISTORY =================
   const fetchHistory = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/fabric/history");
+      const res = await axios.get(
+        `${API}/api/fabric/history`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       setHistory(res.data);
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
   };
 
+  // ================= ADD LENGTH =================
   const handleAddLength = async (id) => {
-    let input = prompt("Enter length to add:");
-    if (input === null) return;
+    const input = prompt("Enter length");
 
-    if (input.trim() === "") {
-      alert("Enter value ❌");
-      return;
-    }
+    if (!input) return;
 
     const length = Number(input);
 
     if (isNaN(length) || length <= 0) {
-      alert("Enter valid number ❌");
+      alert("Invalid value ❌");
       return;
     }
 
     try {
-      await axios.post("http://localhost:5000/api/fabric/add-length", {
-        id,
-        length
-      });
+      await axios.post(
+        `${API}/api/fabric/add-length`,
+        { id, length },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      alert("Length added ✅");
-
-      fetchFabrics();
-      fetchHistory();
-
+      alert("Length Added ✅");
+      fetchAll();
     } catch (err) {
-      alert("Error ❌");
+      alert("Failed ❌");
     }
   };
 
-  const handleDelete = async (item) => {
-    if (!window.confirm("Delete this roll?")) return;
+  // ================= DELETE =================
+  const handleDelete = async (id) => {
+    const ok = window.confirm(
+      "Delete this roll?"
+    );
+
+    if (!ok) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/fabric/${item._id}`);
+      await axios.delete(
+        `${API}/api/fabric/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      alert("Deleted 🗑");
-
-      fetchFabrics();
-      fetchHistory();
-
+      alert("Deleted ✅");
+      fetchAll();
     } catch (err) {
       alert("Delete failed ❌");
     }
   };
 
+  const getStatus = (item) => {
+    if (item.availableLength === 0)
+      return "Out";
+    if (item.availableLength < 20)
+      return "Low";
+    return "Available";
+  };
+
+  if (loading) {
+    return (
+      <div style={{ padding: "30px" }}>
+        Loading...
+      </div>
+    );
+  }
+
   return (
     <div style={container}>
-
-      {/* HEADER */}
+      {/* TOP */}
       <div style={topBar}>
-        <button style={backBtn} onClick={() => navigate("/dashboard")}>
+        <button
+          style={backBtn}
+          onClick={() =>
+            navigate("/dashboard")
+          }
+        >
           ← Back
         </button>
-        <h2>
-          📦 Smart Inventory System
-        </h2>
+
+        <h2>📦 Inventory</h2>
       </div>
 
       {/* STATS */}
-      <div style={{
-        ...statsGrid,
-        gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4,1fr)"
-      }}>
-        <StatCard title="Total" value={stats.total} />
-        <StatCard title="Available" value={stats.available} />
-        <StatCard title="Low Stock" value={stats.low} />
-        <StatCard title="Out" value={stats.out} />
+      <div
+        style={{
+          ...statsGrid,
+          gridTemplateColumns: isMobile
+            ? "1fr 1fr"
+            : "repeat(4,1fr)",
+        }}
+      >
+        <StatCard
+          title="Total"
+          value={stats.total}
+        />
+        <StatCard
+          title="Available"
+          value={stats.available}
+        />
+        <StatCard
+          title="Low"
+          value={stats.low}
+        />
+        <StatCard
+          title="Out"
+          value={stats.out}
+        />
       </div>
 
       {/* TABLE */}
-      <div style={tableWrapper}>
-        <div style={tableBox}>
+      <div style={box}>
+        <h3>Fabric Rolls</h3>
+
+        <div style={scroll}>
           <table style={table}>
             <thead>
-              <tr style={theadRow}>
-                <th style={th}>Roll</th>
-                <th style={th}>Name</th>
-                <th style={th}>Total</th>
-                <th style={th}>Remaining</th>
-                <th style={th}>Status</th>
-                <th style={th}>Actions</th>
+              <tr>
+                <th>Roll</th>
+                <th>Name</th>
+                <th>Total</th>
+                <th>Remain</th>
+                <th>Status</th>
+                <th>Action</th>
               </tr>
             </thead>
 
             <tbody>
-              {items.map((item) => {
-                let status = "Available";
-                if (item.availableLength === 0) status = "Out";
-                else if (item.availableLength < 20) status = "Low";
+              {items.map((item) => (
+                <tr key={item._id}>
+                  <td>{item.rollNumber}</td>
+                  <td>{item.name}</td>
+                  <td>{item.totalLength}</td>
+                  <td>
+                    {item.availableLength}
+                  </td>
 
-                return (
-                  <tr key={item._id} style={tr}>
-                    <td style={td}>{item.rollNumber}</td>
-                    <td style={td}>{item.name}</td>
-                    <td style={td}>{item.totalLength}</td>
-                    <td style={td}>{item.availableLength}</td>
-
-                    <td style={td}>
-                      <span style={getStatusStyle(status)}>
-                        {status}
-                      </span>
-                    </td>
-
-                    <td style={td}>
-                      <div style={actionWrap}>
-                        <button
-                          onClick={() => handleAddLength(item._id)}
-                          style={addBtn}
-                        >
-                          ➕ Add
-                        </button>
-
-                        <button
-                          onClick={() => handleDelete(item)}
-                          style={deleteBtn}
-                        >
-                          🗑 Delete
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* HISTORY */}
-      <div style={tableWrapper}>
-        <div style={historyBox}>
-          <h3>📜 Activity History</h3>
-
-          <table style={table}>
-            <thead>
-              <tr style={theadRow}>
-                <th style={th}>Roll</th>
-                <th style={th}>Action</th>
-                <th style={th}>Length</th>
-                <th style={th}>Remaining</th>
-                <th style={th}>Time</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {history.map((h, i) => (
-                <tr key={i} style={tr}>
-                  <td style={td}>{h.rollNumber}</td>
-
-                  <td style={td}>
-                    <span style={{
-                      color:
-                        h.action === "ADD" ? "#16a34a" :
-                        h.action === "CUT" ? "#ca8a04" :
-                        "#dc2626"
-                    }}>
-                      {h.action}
+                  <td>
+                    <span
+                      style={statusStyle(
+                        getStatus(item)
+                      )}
+                    >
+                      {getStatus(item)}
                     </span>
                   </td>
 
-                  <td style={td}>{h.length}</td>
-                  <td style={td}>{h.remainingLength}</td>
-                  <td style={td}>
-                    {new Date(h.createdAt).toLocaleString()}
+                  <td>
+                    <button
+                      style={addBtn}
+                      onClick={() =>
+                        handleAddLength(
+                          item._id
+                        )
+                      }
+                    >
+                      Add
+                    </button>
+
+                    <button
+                      style={deleteBtn}
+                      onClick={() =>
+                        handleDelete(
+                          item._id
+                        )
+                      }
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -237,116 +291,149 @@ const Inventory = () => {
         </div>
       </div>
 
+      {/* HISTORY */}
+      <div style={box}>
+        <h3>📜 History</h3>
+
+        <div style={scroll}>
+          <table style={table}>
+            <thead>
+              <tr>
+                <th>Roll</th>
+                <th>Action</th>
+                <th>Length</th>
+                <th>Remain</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {history.map((h, i) => (
+                <tr key={i}>
+                  <td>{h.rollNumber}</td>
+                  <td>{h.action}</td>
+                  <td>{h.length}</td>
+                  <td>
+                    {h.remainingLength}
+                  </td>
+                  <td>
+                    {new Date(
+                      h.createdAt
+                    ).toLocaleString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };
 
-/* COMPONENT */
-const StatCard = ({ title, value }) => (
+// ================= COMPONENT =================
+const StatCard = ({
+  title,
+  value,
+}) => (
   <div style={statCard}>
     <h4>{title}</h4>
     <h2>{value}</h2>
   </div>
 );
 
-/* STATUS STYLE */
-const getStatusStyle = (status) => {
-  const base = {
-    padding: "5px 10px",
-    borderRadius: "10px",
-    color: "#fff"
-  };
-
-  if (status === "Available") return { ...base, background: "#22c55e" };
-  if (status === "Low") return { ...base, background: "#facc15", color: "#000" };
-  return { ...base, background: "#ef4444" };
-};
-
-/* STYLES (🔥 BRIGHT) */
+// ================= STYLES =================
 const container = {
   padding: "20px",
   background: "#f1f5f9",
-  color: "#0f172a",
-  minHeight: "100vh"
+  minHeight: "100vh",
 };
 
 const topBar = {
   display: "flex",
-  gap: "10px",
+  gap: "15px",
   alignItems: "center",
-  flexWrap: "wrap"
+  marginBottom: "20px",
 };
 
 const backBtn = {
-  padding: "8px 12px",
-  background: "#3b82f6",
-  color: "#fff",
+  background: "#2563eb",
+  color: "white",
   border: "none",
-  borderRadius: "6px",
-  cursor: "pointer"
+  padding: "8px 14px",
+  borderRadius: "8px",
 };
 
 const statsGrid = {
   display: "grid",
   gap: "15px",
-  margin: "20px 0"
+  marginBottom: "20px",
 };
 
 const statCard = {
-  background: "#ffffff",
+  background: "white",
   padding: "15px",
   borderRadius: "12px",
   textAlign: "center",
-  boxShadow: "0 5px 15px rgba(0,0,0,0.05)"
 };
 
-const tableWrapper = {
-  overflowX: "auto"
-};
-
-const tableBox = {
-  background: "#ffffff",
+const box = {
+  background: "white",
   padding: "15px",
   borderRadius: "12px",
-  minWidth: "600px",
-  boxShadow: "0 5px 15px rgba(0,0,0,0.05)"
+  marginBottom: "20px",
 };
 
-const historyBox = {
-  marginTop: "30px",
-  background: "#ffffff",
-  padding: "15px",
-  borderRadius: "12px",
-  minWidth: "600px",
-  boxShadow: "0 5px 15px rgba(0,0,0,0.05)"
+const scroll = {
+  overflowX: "auto",
 };
 
-const table = { width: "100%" };
-const th = { padding: "10px", textAlign: "left" };
-const td = { padding: "10px" };
-const tr = { borderBottom: "1px solid #e2e8f0" };
-const theadRow = {};
-
-const actionWrap = {
-  display: "flex",
-  flexWrap: "wrap",
-  gap: "5px"
+const table = {
+  width: "100%",
 };
 
 const addBtn = {
   background: "#22c55e",
+  color: "white",
   border: "none",
   padding: "6px 10px",
+  marginRight: "5px",
   borderRadius: "6px",
-  color: "#fff"
 };
 
 const deleteBtn = {
   background: "#ef4444",
+  color: "white",
   border: "none",
   padding: "6px 10px",
   borderRadius: "6px",
-  color: "white"
+};
+
+const statusStyle = (status) => {
+  if (status === "Available") {
+    return {
+      background: "#22c55e",
+      color: "white",
+      padding: "4px 8px",
+      borderRadius: "8px",
+    };
+  }
+
+  if (status === "Low") {
+    return {
+      background: "#facc15",
+      color: "black",
+      padding: "4px 8px",
+      borderRadius: "8px",
+    };
+  }
+
+  return {
+    background: "#ef4444",
+    color: "white",
+    padding: "4px 8px",
+    borderRadius: "8px",
+  };
 };
 
 export default Inventory;
