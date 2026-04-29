@@ -32,36 +32,25 @@ const Login = () => {
 
   // ✅ LOGIN
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const res = await axios.post(
-        `${API}/api/auth/login`,
-        form
-      );
+  try {
+    const res = await axios.post(
+      `${API}/api/auth/login`,
+      form
+    );
 
-      // ✅ SAVE TOKEN
-      localStorage.setItem(
-        "token",
-        res.data.token
-      );
+    localStorage.setItem("token", res.data.token);
+    localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      localStorage.setItem(
-        "user",
-        JSON.stringify(res.data.user)
-      );
+    alert("Login Successful ✅");
 
-      alert("Login Successful ✅");
+    navigate("/dashboard", { replace: true });
 
-      navigate("/dashboard");
-
-    } catch (error) {
-      alert(
-        error?.response?.data?.msg ||
-        "Login failed ❌"
-      );
-    }
-  };
+  } catch (error) {
+    alert(error?.response?.data?.msg || "Login failed ❌");
+  }
+};
 
   // forgot password
   const handleForgotPassword = async (e) => {
