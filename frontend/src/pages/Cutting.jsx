@@ -14,16 +14,6 @@ const Cutting = () => {
 
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    if (!token) {
-      navigate("/");
-      return;
-    }
-
-    fetchFabrics();
-    fetchHistory();
-  }, []);
-
   // ================= FETCH FABRICS =================
   const fetchFabrics = async () => {
     try {
@@ -31,8 +21,8 @@ const Cutting = () => {
         `${API}/api/fabric`,
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -50,8 +40,8 @@ const Cutting = () => {
         `${API}/api/fabric/cut-history`,
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -61,6 +51,18 @@ const Cutting = () => {
       console.log(err);
     }
   };
+
+  // ✅ FIXED useEffect
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+      return;
+    }
+
+    fetchFabrics();
+    fetchHistory();
+
+  }, [navigate, token]);
 
   const selectedRoll = rolls.find(
     (r) => r._id === roll
@@ -82,8 +84,8 @@ const Cutting = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -127,7 +129,6 @@ const Cutting = () => {
         <h2>✂️ Cutting Management</h2>
       </div>
 
-      {/* FORM */}
       <div style={card}>
 
         <select
@@ -170,7 +171,6 @@ const Cutting = () => {
 
       </div>
 
-      {/* PREVIEW */}
       {selectedRoll && (
         <div style={previewCard}>
           <p>
@@ -190,7 +190,6 @@ const Cutting = () => {
         </div>
       )}
 
-      {/* TABLE */}
       <div style={tableBox}>
         <h3>📜 Cutting History</h3>
 
@@ -211,9 +210,7 @@ const Cutting = () => {
                 <td>{item.rollNumber}</td>
                 <td>{item.name}</td>
                 <td>{item.cutLength}</td>
-                <td>
-                  {item.remainingLength}
-                </td>
+                <td>{item.remainingLength}</td>
                 <td>
                   {new Date(
                     item.createdAt
