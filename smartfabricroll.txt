@@ -1,0 +1,12 @@
+smartfabricroll crendials
+
+
+
+
+
+email - smartfabricroll@gmail.com
+pass - Smartfabricroll@4
+
+
+mongodb string - mongodb+srv://smartfabricroll_db_user:Smartfabricroll4@smartfabricroll.ijcf0sv.mongodb.net/
+pass - Smartfabricroll4
