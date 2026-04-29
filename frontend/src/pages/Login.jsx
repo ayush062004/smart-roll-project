@@ -19,10 +19,10 @@ const Login = () => {
   useEffect(() => {
   const token = localStorage.getItem("token");
 
-  if (token && window.location.pathname === "/") {
-    navigate("/dashboard", { replace: true });
+  if (token) {
+    navigate("/dashboard");
   }
-}, [navigate]);
+}, []);
   const handleChange = (e) => {
     setForm({
       ...form,
