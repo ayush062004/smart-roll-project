@@ -17,12 +17,13 @@ connectDB();
 const app = express();
 
 // 🌐 CORS (frontend connect)
-app.use(
-  cors({
-    origin: "http://localhost:3000", // frontend URL
-    credentials: true, // cookies ke liye important
-  })
-);
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    "https://smart-roll-project.vercel.app"
+  ],
+  credentials: true
+}));
 
 // 📦 Middlewares
 app.use(express.json());
