@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -15,44 +15,36 @@ const Cutting = () => {
   const token = localStorage.getItem("token");
 
   // ================= FETCH FABRICS =================
-  const fetchFabrics = async () => {
+  const fetchFabrics = useCallback(async () => {
     try {
-      const res = await axios.get(
-        `${API}/api/fabric`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${API}/api/fabric`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setRolls(res.data);
-
     } catch (err) {
       console.log(err);
     }
-  };
+  }, [token]);
 
   // ================= FETCH HISTORY =================
-  const fetchHistory = async () => {
+  const fetchHistory = useCallback(async () => {
     try {
-      const res = await axios.get(
-        `${API}/api/fabric/cut-history`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${API}/api/fabric/cut-history`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setHistory(res.data);
-
     } catch (err) {
       console.log(err);
     }
-  };
+  }, [token]);
 
-  // ✅ FIXED useEffect
+  // ================= USE EFFECT =================
   useEffect(() => {
     if (!token) {
       navigate("/");
@@ -61,14 +53,11 @@ const Cutting = () => {
 
     fetchFabrics();
     fetchHistory();
+  }, [navigate, token, fetchFabrics, fetchHistory]);
 
-  }, [navigate, token]);
+  const selectedRoll = rolls.find((r) => r._id === roll);
 
-  const selectedRoll = rolls.find(
-    (r) => r._id === roll
-  );
-
-  // ================= CUT =================
+  // ================= CUT FABRIC =================
   const handleCut = async () => {
     if (!roll || !cutAmount) {
       alert("Select roll first ❌");
@@ -93,9 +82,7 @@ const Cutting = () => {
 
       setRolls((prev) =>
         prev.map((item) =>
-          item._id === roll
-            ? updatedFabric
-            : item
+          item._id === roll ? updatedFabric : item
         )
       );
 
@@ -104,20 +91,19 @@ const Cutting = () => {
       setCutAmount("");
 
       alert("Cut Successful ✅");
-
     } catch (err) {
       console.log(err.response?.data);
 
       alert(
         err.response?.data?.msg ||
-        "Cut Failed ❌"
+          err.response?.data?.message ||
+          "Cut Failed ❌"
       );
     }
   };
 
   return (
     <div style={container}>
-
       <div style={topBar}>
         <button
           onClick={() => navigate(-1)}
@@ -129,24 +115,17 @@ const Cutting = () => {
         <h2>✂️ Cutting Management</h2>
       </div>
 
+      {/* FORM */}
       <div style={card}>
-
         <select
           value={roll}
-          onChange={(e) =>
-            setRoll(e.target.value)
-          }
+          onChange={(e) => setRoll(e.target.value)}
           style={input}
         >
-          <option value="">
-            Select Roll
-          </option>
+          <option value="">Select Roll</option>
 
           {rolls.map((r) => (
-            <option
-              key={r._id}
-              value={r._id}
-            >
+            <option key={r._id} value={r._id}>
               {r.rollNumber} - {r.name}
             </option>
           ))}
@@ -156,32 +135,20 @@ const Cutting = () => {
           type="number"
           placeholder="Enter cut amount"
           value={cutAmount}
-          onChange={(e) =>
-            setCutAmount(e.target.value)
-          }
+          onChange={(e) => setCutAmount(e.target.value)}
           style={input}
         />
 
-        <button
-          onClick={handleCut}
-          style={btn}
-        >
+        <button onClick={handleCut} style={btn}>
           Cut Fabric
         </button>
-
       </div>
 
+      {/* PREVIEW */}
       {selectedRoll && (
         <div style={previewCard}>
-          <p>
-            Total: {selectedRoll.totalLength}
-          </p>
-
-          <p>
-            Remaining:
-            {selectedRoll.availableLength}
-          </p>
-
+          <p>Total: {selectedRoll.totalLength}</p>
+          <p>Remaining: {selectedRoll.availableLength}</p>
           <p>
             After Cut:{" "}
             {selectedRoll.availableLength -
@@ -190,6 +157,7 @@ const Cutting = () => {
         </div>
       )}
 
+      {/* HISTORY */}
       <div style={tableBox}>
         <h3>📜 Cutting History</h3>
 
@@ -221,7 +189,6 @@ const Cutting = () => {
           </tbody>
         </table>
       </div>
-
     </div>
   );
 };
@@ -238,6 +205,7 @@ const topBar = {
   display: "flex",
   gap: "10px",
   marginBottom: "20px",
+  alignItems: "center",
 };
 
 const backBtn = {
@@ -246,6 +214,7 @@ const backBtn = {
   color: "white",
   border: "none",
   borderRadius: "6px",
+  cursor: "pointer",
 };
 
 const card = {
@@ -267,6 +236,7 @@ const btn = {
   background: "#2563eb",
   color: "white",
   border: "none",
+  cursor: "pointer",
 };
 
 const previewCard = {
