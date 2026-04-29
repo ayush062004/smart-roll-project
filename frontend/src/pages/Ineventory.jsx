@@ -1,15 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const API = "https://smart-roll-backend.onrender.com";
+const API =
+  "https://smart-roll-backend.onrender.com";
 
 const Inventory = () => {
   const navigate = useNavigate();
 
   const [items, setItems] = useState([]);
   const [history, setHistory] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] =
+    useState(true);
 
   const [stats, setStats] = useState({
     total: 0,
@@ -18,106 +24,138 @@ const Inventory = () => {
     out: 0,
   });
 
-  const [isMobile, setIsMobile] = useState(
-    window.innerWidth < 768
+  const [isMobile, setIsMobile] =
+    useState(window.innerWidth < 768);
+
+  const token = localStorage.getItem(
+    "token"
   );
 
-  const token = localStorage.getItem("token");
+  // ================= FETCH FABRICS =================
+  const fetchFabrics = useCallback(
+    async () => {
+      try {
+        const res = await axios.get(
+          `${API}/api/fabric`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-  // ================= AUTH CHECK =================
+        setItems(res.data);
+
+        let available = 0;
+        let low = 0;
+        let out = 0;
+
+        res.data.forEach((item) => {
+          if (
+            item.availableLength === 0
+          )
+            out++;
+          else if (
+            item.availableLength < 20
+          )
+            low++;
+          else available++;
+        });
+
+        setStats({
+          total: res.data.length,
+          available,
+          low,
+          out,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [token]
+  );
+
+  // ================= FETCH HISTORY =================
+  const fetchHistory = useCallback(
+    async () => {
+      try {
+        const res = await axios.get(
+          `${API}/api/fabric/history`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setHistory(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [token]
+  );
+
+  // ================= FETCH ALL =================
+  const fetchAll = useCallback(
+    async () => {
+      setLoading(true);
+
+      await Promise.all([
+        fetchFabrics(),
+        fetchHistory(),
+      ]);
+
+      setLoading(false);
+    },
+    [fetchFabrics, fetchHistory]
+  );
+
+  // ================= AUTH + LOAD =================
   useEffect(() => {
     if (!token) {
       navigate("/login");
+      return;
     }
-  }, [navigate, token]);
+
+    fetchAll();
+  }, [token, navigate, fetchAll]);
 
   // ================= RESIZE =================
   useEffect(() => {
     const resize = () =>
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(
+        window.innerWidth < 768
+      );
 
-    window.addEventListener("resize", resize);
+    window.addEventListener(
+      "resize",
+      resize
+    );
 
     return () =>
-      window.removeEventListener("resize", resize);
-  }, []);
-
-  // ================= LOAD DATA =================
-  useEffect(() => {
-    fetchAll();
-  }, []);
-
-  const fetchAll = async () => {
-    setLoading(true);
-    await Promise.all([
-      fetchFabrics(),
-      fetchHistory(),
-    ]);
-    setLoading(false);
-  };
-
-  // ================= FETCH FABRICS =================
-  const fetchFabrics = async () => {
-    try {
-      const res = await axios.get(
-        `${API}/api/fabric`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      window.removeEventListener(
+        "resize",
+        resize
       );
-
-      setItems(res.data);
-
-      let available = 0;
-      let low = 0;
-      let out = 0;
-
-      res.data.forEach((item) => {
-        if (item.availableLength === 0) out++;
-        else if (item.availableLength < 20) low++;
-        else available++;
-      });
-
-      setStats({
-        total: res.data.length,
-        available,
-        low,
-        out,
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // ================= FETCH HISTORY =================
-  const fetchHistory = async () => {
-    try {
-      const res = await axios.get(
-        `${API}/api/fabric/history`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      setHistory(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  }, []);
 
   // ================= ADD LENGTH =================
-  const handleAddLength = async (id) => {
-    const input = prompt("Enter length");
+  const handleAddLength = async (
+    id
+  ) => {
+    const input = prompt(
+      "Enter length"
+    );
 
     if (!input) return;
 
     const length = Number(input);
 
-    if (isNaN(length) || length <= 0) {
+    if (
+      isNaN(length) ||
+      length <= 0
+    ) {
       alert("Invalid value ❌");
       return;
     }
@@ -135,13 +173,15 @@ const Inventory = () => {
 
       alert("Length Added ✅");
       fetchAll();
-    } catch (err) {
+    } catch {
       alert("Failed ❌");
     }
   };
 
   // ================= DELETE =================
-  const handleDelete = async (id) => {
+  const handleDelete = async (
+    id
+  ) => {
     const ok = window.confirm(
       "Delete this roll?"
     );
@@ -160,16 +200,22 @@ const Inventory = () => {
 
       alert("Deleted ✅");
       fetchAll();
-    } catch (err) {
+    } catch {
       alert("Delete failed ❌");
     }
   };
 
   const getStatus = (item) => {
-    if (item.availableLength === 0)
+    if (
+      item.availableLength === 0
+    )
       return "Out";
-    if (item.availableLength < 20)
+
+    if (
+      item.availableLength < 20
+    )
       return "Low";
+
     return "Available";
   };
 
@@ -183,7 +229,6 @@ const Inventory = () => {
 
   return (
     <div style={container}>
-      {/* TOP */}
       <div style={topBar}>
         <button
           style={backBtn}
@@ -201,9 +246,10 @@ const Inventory = () => {
       <div
         style={{
           ...statsGrid,
-          gridTemplateColumns: isMobile
-            ? "1fr 1fr"
-            : "repeat(4,1fr)",
+          gridTemplateColumns:
+            isMobile
+              ? "1fr 1fr"
+              : "repeat(4,1fr)",
         }}
       >
         <StatCard
@@ -244,20 +290,30 @@ const Inventory = () => {
             <tbody>
               {items.map((item) => (
                 <tr key={item._id}>
-                  <td>{item.rollNumber}</td>
-                  <td>{item.name}</td>
-                  <td>{item.totalLength}</td>
                   <td>
-                    {item.availableLength}
+                    {item.rollNumber}
+                  </td>
+                  <td>{item.name}</td>
+                  <td>
+                    {item.totalLength}
+                  </td>
+                  <td>
+                    {
+                      item.availableLength
+                    }
                   </td>
 
                   <td>
                     <span
                       style={statusStyle(
-                        getStatus(item)
+                        getStatus(
+                          item
+                        )
                       )}
                     >
-                      {getStatus(item)}
+                      {getStatus(
+                        item
+                      )}
                     </span>
                   </td>
 
@@ -274,7 +330,9 @@ const Inventory = () => {
                     </button>
 
                     <button
-                      style={deleteBtn}
+                      style={
+                        deleteBtn
+                      }
                       onClick={() =>
                         handleDelete(
                           item._id
@@ -308,21 +366,33 @@ const Inventory = () => {
             </thead>
 
             <tbody>
-              {history.map((h, i) => (
-                <tr key={i}>
-                  <td>{h.rollNumber}</td>
-                  <td>{h.action}</td>
-                  <td>{h.length}</td>
-                  <td>
-                    {h.remainingLength}
-                  </td>
-                  <td>
-                    {new Date(
-                      h.createdAt
-                    ).toLocaleString()}
-                  </td>
-                </tr>
-              ))}
+              {history.map(
+                (h, i) => (
+                  <tr key={i}>
+                    <td>
+                      {
+                        h.rollNumber
+                      }
+                    </td>
+                    <td>
+                      {h.action}
+                    </td>
+                    <td>
+                      {h.length}
+                    </td>
+                    <td>
+                      {
+                        h.remainingLength
+                      }
+                    </td>
+                    <td>
+                      {new Date(
+                        h.createdAt
+                      ).toLocaleString()}
+                    </td>
+                  </tr>
+                )
+              )}
             </tbody>
           </table>
         </div>
@@ -409,7 +479,9 @@ const deleteBtn = {
   borderRadius: "6px",
 };
 
-const statusStyle = (status) => {
+const statusStyle = (
+  status
+) => {
   if (status === "Available") {
     return {
       background: "#22c55e",
