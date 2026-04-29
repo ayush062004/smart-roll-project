@@ -30,20 +30,21 @@ exports.login = async (req, res) => {
       { expiresIn: "1d" }
     );
 
-   res.cookie("token", token, {
-  httpOnly: true,
-  secure: true,
-  sameSite: "none",
-  path: "/",
-  maxAge: 24 * 60 * 60 * 1000
-});
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      path: "/",
+      maxAge: 24 * 60 * 60 * 1000
+    });
 
-    res.status(200).json({
+    return res.status(200).json({
       msg: "Login successful ✅"
     });
 
   } catch (err) {
-    res.status(500).json({ msg: "Server error ❌" });
+    console.error(err);
+    return res.status(500).json({ msg: "Server error ❌" });
   }
 };
 
@@ -51,8 +52,9 @@ exports.logout = (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
     secure: true,
-    sameSite: "None"
+    sameSite: "none",
+    path: "/"
   });
 
-  res.json({ msg: "Logout successful ✅" });
+  return res.json({ msg: "Logout successful ✅" });
 };
