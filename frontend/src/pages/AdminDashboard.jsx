@@ -274,26 +274,28 @@ const AdminDashboard = () => {
         {activeTab === "cuts" && (
           <TableWrapper title="Cut History">
             <thead>
-              <tr>
-                <th>Roll</th>
-                <th>Cut</th>
-                <th>Remain</th>
-                <th>Date</th>
-              </tr>
-            </thead>
+  <tr>
+    <th>Roll</th>
+    <th>Name</th>
+    <th>Cut</th>
+    <th>Remain</th>
+    <th>Date</th>
+  </tr>
+</thead>
 
-            <tbody>
-              {cuts.map((c) => (
-                <tr key={c._id}>
-                  <td>{c.rollNumber}</td>
-                  <td>{c.cutLength}</td>
-                  <td>{c.remainingLength}</td>
-                  <td>
-                    {new Date(c.createdAt).toLocaleString()}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+<tbody>
+  {cuts.map((c) => (
+    <tr key={c._id}>
+      <td>{c.rollNumber}</td>
+      <td>{c.name}</td>
+      <td>{c.cutLength}</td>
+      <td>{c.remainingLength}</td>
+      <td>
+        {new Date(c.createdAt).toLocaleString()}
+      </td>
+    </tr>
+  ))}
+</tbody>
           </TableWrapper>
         )}
 
