@@ -2,6 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+const API = "https://smart-roll-backend.onrender.com";
+
+// 🔥 VERY IMPORTANT
+axios.defaults.withCredentials = true;
+
 const Cutting = () => {
   const navigate = useNavigate();
 
@@ -9,8 +14,6 @@ const Cutting = () => {
   const [cutAmount, setCutAmount] = useState("");
   const [rolls, setRolls] = useState([]);
   const [history, setHistory] = useState([]);
-
-  const API = "https://smart-roll-backend.onrender.com";
 
   useEffect(() => {
     fetchFabrics();
@@ -22,19 +25,16 @@ const Cutting = () => {
       const res = await axios.get(`${API}/api/fabric`);
       setRolls(res.data);
     } catch (err) {
-      console.error("Fetch error:", err);
+      console.error(err);
     }
   };
 
   const fetchHistory = async () => {
     try {
-      const res = await axios.get(
-        `${API}/api/fabric/cut-history`,
-        { withCredentials: true }
-      );
+      const res = await axios.get(`${API}/api/fabric/cut-history`);
       setHistory(res.data);
     } catch (err) {
-      console.error("History error:", err);
+      console.error(err);
     }
   };
 
@@ -42,26 +42,15 @@ const Cutting = () => {
 
   const handleCut = async () => {
     if (!roll || !cutAmount) {
-      alert("Select roll & enter cut amount ❗");
-      return;
-    }
-
-    const cutLength = Number(cutAmount);
-
-    if (cutLength > selectedRoll.availableLength) {
-      alert("Not enough stock ❌");
+      alert("Select roll first ❌");
       return;
     }
 
     try {
-      const res = await axios.post(
-        `${API}/api/fabric/cut`,
-        {
-          id: roll,
-          cutLength: cutLength
-        },
-        { withCredentials: true }
-      );
+      const res = await axios.post(`${API}/api/fabric/cut`, {
+        id: roll,
+        cutLength: Number(cutAmount),
+      });
 
       const updatedFabric = res.data;
 
@@ -75,32 +64,32 @@ const Cutting = () => {
 
       setCutAmount("");
 
-      alert("Cut successful ✂️ ✅");
+      alert("Cut Successful ✅");
 
     } catch (err) {
-      console.error("CUT ERROR 👉", err.response?.data || err.message);
-      alert(err?.response?.data?.message || "Cut failed ❌");
+      console.log(err.response?.data);
+      alert(err.response?.data?.msg || "Cut Failed ❌");
     }
   };
 
   return (
     <div style={container}>
-
-      {/* HEADER */}
       <div style={topBar}>
         <button onClick={() => navigate(-1)} style={backBtn}>
           ⬅ Back
         </button>
 
-        <h2 style={{ margin: 0, fontSize: "clamp(20px,4vw,28px)" }}>
-          ✂️ Cutting Management
-        </h2>
+        <h2>✂️ Cutting Management</h2>
       </div>
 
-      {/* FORM */}
       <div style={card}>
-        <select value={roll} onChange={(e) => setRoll(e.target.value)} style={input}>
-          <option value="">Select Fabric Roll</option>
+        <select
+          value={roll}
+          onChange={(e) => setRoll(e.target.value)}
+          style={input}
+        >
+          <option value="">Select Roll</option>
+
           {rolls.map((r) => (
             <option key={r._id} value={r._id}>
               {r.rollNumber} - {r.name}
@@ -121,132 +110,111 @@ const Cutting = () => {
         </button>
       </div>
 
-      {/* PREVIEW */}
       {selectedRoll && (
         <div style={previewCard}>
           <p>Total: {selectedRoll.totalLength}</p>
           <p>Remaining: {selectedRoll.availableLength}</p>
           <p>
-            After Cut: {selectedRoll.availableLength - (cutAmount || 0)}
+            After Cut:{" "}
+            {selectedRoll.availableLength - Number(cutAmount || 0)}
           </p>
         </div>
       )}
 
-      {/* TABLE */}
-      <div style={tableWrapper}>
-        <div style={tableBox}>
-          <h3>📜 Cutting History</h3>
+      <div style={tableBox}>
+        <h3>📜 Cutting History</h3>
 
-          <table style={table}>
-            <thead>
-              <tr>
-                <th>Roll</th>
-                <th>Name</th>
-                <th>Cut</th>
-                <th>Remaining</th>
-                <th>Time</th>
+        <table style={table}>
+          <thead>
+            <tr>
+              <th>Roll</th>
+              <th>Name</th>
+              <th>Cut</th>
+              <th>Remaining</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {history.map((item) => (
+              <tr key={item._id}>
+                <td>{item.rollNumber}</td>
+                <td>{item.name}</td>
+                <td>{item.cutLength}</td>
+                <td>{item.remainingLength}</td>
+                <td>
+                  {new Date(item.createdAt).toLocaleString()}
+                </td>
               </tr>
-            </thead>
-
-            <tbody>
-              {history.map((item) => (
-                <tr key={item._id}>
-                  <td>{item.rollNumber}</td>
-                  <td>{item.name}</td>
-                  <td>{item.cutLength}</td>
-                  <td>{item.remainingLength}</td>
-                  <td>{new Date(item.createdAt).toLocaleString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
-
     </div>
   );
 };
 
-/* 🎨 BRIGHT THEME */
+/* UI */
 
 const container = {
   padding: "20px",
   background: "#f1f5f9",
-  color: "#0f172a",
-  minHeight: "100vh"
+  minHeight: "100vh",
 };
 
 const topBar = {
   display: "flex",
-  alignItems: "center",
   gap: "10px",
-  flexWrap: "wrap",
-  marginBottom: "20px"
+  marginBottom: "20px",
 };
 
 const backBtn = {
   padding: "8px 12px",
-  background: "#3b82f6",
+  background: "#2563eb",
   color: "white",
   border: "none",
   borderRadius: "6px",
-  cursor: "pointer"
 };
 
 const card = {
+  background: "white",
   padding: "20px",
-  background: "#ffffff",
   borderRadius: "12px",
-  width: "100%",
   maxWidth: "500px",
-  marginBottom: "20px",
-  boxShadow: "0 8px 20px rgba(0,0,0,0.08)"
 };
 
 const input = {
+  width: "100%",
   padding: "10px",
   marginBottom: "10px",
-  width: "100%",
-  borderRadius: "8px",
-  border: "1px solid #e2e8f0",
-  outline: "none"
 };
 
 const btn = {
+  width: "100%",
   padding: "10px",
-  background: "#3b82f6",
+  background: "#2563eb",
   color: "white",
   border: "none",
-  borderRadius: "8px",
-  fontWeight: "bold",
-  cursor: "pointer"
 };
 
 const previewCard = {
-  marginTop: "10px",
+  marginTop: "20px",
+  background: "white",
   padding: "15px",
-  background: "#ffffff",
   borderRadius: "12px",
-  width: "100%",
   maxWidth: "500px",
-  boxShadow: "0 5px 15px rgba(0,0,0,0.05)"
-};
-
-const tableWrapper = {
-  overflowX: "auto"
 };
 
 const tableBox = {
   marginTop: "20px",
-  background: "#ffffff",
+  background: "white",
   padding: "15px",
   borderRadius: "12px",
-  minWidth: "600px",
-  boxShadow: "0 8px 20px rgba(0,0,0,0.08)"
+  overflowX: "auto",
 };
 
 const table = {
-  width: "100%"
+  width: "100%",
 };
 
 export default Cutting;
