@@ -22,7 +22,7 @@ const Login = () => {
   if (token) {
     navigate("/dashboard");
   }
-}, []);
+}, [navigate]);
   const handleChange = (e) => {
     setForm({
       ...form,
