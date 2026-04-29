@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FaGithub, FaWhatsapp, FaTwitter } from 'react-icons/fa';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 

@@ -26,7 +26,7 @@ const AdminDashboard = () => {
     const resize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", resize);
     return () => window.removeEventListener("resize", resize);
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const isAdmin = localStorage.getItem("admin");

@@ -25,7 +25,7 @@ const Landing = () => {
     }, 2500);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [images.length]);
 
   useEffect(() => {
     const resize = () => setIsMobile(window.innerWidth < 768);
