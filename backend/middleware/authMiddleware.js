@@ -2,11 +2,13 @@ const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
   try {
-    const token = req.cookies.token;
+    const header = req.headers.authorization;
 
-    if (!token) {
+    if (!header || !header.startsWith("Bearer ")) {
       return res.status(401).json({ msg: "No token ❌" });
     }
+
+    const token = header.split(" ")[1];
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
