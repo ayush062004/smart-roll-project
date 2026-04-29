@@ -18,10 +18,7 @@ const app = express();
 
 // 🌐 CORS (frontend connect)
 app.use(cors({
-  origin: [
-    "http://localhost:3000",
-    "https://smart-roll-project.vercel.app"
-  ],
+  origin: "https://smart-roll-project.vercel.app",
   credentials: true
 }));
 
