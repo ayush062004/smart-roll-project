@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
+const token = localStorage.getItem("token");
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const API = "https://smart-roll-backend.onrender.com";
+
+// 🔥 VERY IMPORTANT
+axios.defaults.withCredentials = true;
 
 const Cutting = () => {
   const navigate = useNavigate();
@@ -11,8 +15,6 @@ const Cutting = () => {
   const [cutAmount, setCutAmount] = useState("");
   const [rolls, setRolls] = useState([]);
   const [history, setHistory] = useState([]);
-
-  const token = localStorage.getItem("token");
 
   useEffect(() => {
     fetchFabrics();
@@ -30,17 +32,8 @@ const Cutting = () => {
 
   const fetchHistory = async () => {
     try {
-      const res = await axios.get(
-        `${API}/api/fabric/cut-history`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-
+      const res = await axios.get(`${API}/api/fabric/cut-history`);
       setHistory(res.data);
-
     } catch (err) {
       console.error(err);
     }
@@ -55,18 +48,10 @@ const Cutting = () => {
     }
 
     try {
-      const res = await axios.post(
-        `${API}/api/fabric/cut`,
-        {
-          id: roll,
-          cutLength: Number(cutAmount)
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
+      const res = await axios.post(`${API}/api/fabric/cut`, {
+        id: roll,
+        cutLength: Number(cutAmount),
+      });
 
       const updatedFabric = res.data;
 
@@ -91,10 +76,7 @@ const Cutting = () => {
   return (
     <div style={container}>
       <div style={topBar}>
-        <button
-          onClick={() => navigate(-1)}
-          style={backBtn}
-        >
+        <button onClick={() => navigate(-1)} style={backBtn}>
           ⬅ Back
         </button>
 
@@ -120,16 +102,11 @@ const Cutting = () => {
           type="number"
           placeholder="Enter cut amount"
           value={cutAmount}
-          onChange={(e) =>
-            setCutAmount(e.target.value)
-          }
+          onChange={(e) => setCutAmount(e.target.value)}
           style={input}
         />
 
-        <button
-          onClick={handleCut}
-          style={btn}
-        >
+        <button onClick={handleCut} style={btn}>
           Cut Fabric
         </button>
       </div>
@@ -137,14 +114,10 @@ const Cutting = () => {
       {selectedRoll && (
         <div style={previewCard}>
           <p>Total: {selectedRoll.totalLength}</p>
-          <p>
-            Remaining:{" "}
-            {selectedRoll.availableLength}
-          </p>
+          <p>Remaining: {selectedRoll.availableLength}</p>
           <p>
             After Cut:{" "}
-            {selectedRoll.availableLength -
-              Number(cutAmount || 0)}
+            {selectedRoll.availableLength - Number(cutAmount || 0)}
           </p>
         </div>
       )}
@@ -171,9 +144,7 @@ const Cutting = () => {
                 <td>{item.cutLength}</td>
                 <td>{item.remainingLength}</td>
                 <td>
-                  {new Date(
-                    item.createdAt
-                  ).toLocaleString()}
+                  {new Date(item.createdAt).toLocaleString()}
                 </td>
               </tr>
             ))}
@@ -189,13 +160,13 @@ const Cutting = () => {
 const container = {
   padding: "20px",
   background: "#f1f5f9",
-  minHeight: "100vh"
+  minHeight: "100vh",
 };
 
 const topBar = {
   display: "flex",
   gap: "10px",
-  marginBottom: "20px"
+  marginBottom: "20px",
 };
 
 const backBtn = {
@@ -203,20 +174,20 @@ const backBtn = {
   background: "#2563eb",
   color: "white",
   border: "none",
-  borderRadius: "6px"
+  borderRadius: "6px",
 };
 
 const card = {
   background: "white",
   padding: "20px",
   borderRadius: "12px",
-  maxWidth: "500px"
+  maxWidth: "500px",
 };
 
 const input = {
   width: "100%",
   padding: "10px",
-  marginBottom: "10px"
+  marginBottom: "10px",
 };
 
 const btn = {
@@ -224,7 +195,7 @@ const btn = {
   padding: "10px",
   background: "#2563eb",
   color: "white",
-  border: "none"
+  border: "none",
 };
 
 const previewCard = {
@@ -232,7 +203,7 @@ const previewCard = {
   background: "white",
   padding: "15px",
   borderRadius: "12px",
-  maxWidth: "500px"
+  maxWidth: "500px",
 };
 
 const tableBox = {
@@ -240,11 +211,11 @@ const tableBox = {
   background: "white",
   padding: "15px",
   borderRadius: "12px",
-  overflowX: "auto"
+  overflowX: "auto",
 };
 
 const table = {
-  width: "100%"
+  width: "100%",
 };
 
 export default Cutting;

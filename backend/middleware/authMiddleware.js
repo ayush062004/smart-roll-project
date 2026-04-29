@@ -2,13 +2,11 @@ const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
   try {
-    const header = req.headers.authorization;
+    const token = req.cookies.token;
 
-    if (!header) {
+    if (!token) {
       return res.status(401).json({ msg: "No token ❌" });
     }
-
-    const token = header.split(" ")[1];
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -17,6 +15,6 @@ module.exports = (req, res, next) => {
     next();
 
   } catch (err) {
-    res.status(401).json({ msg: "Invalid token ❌" });
+    return res.status(401).json({ msg: "Invalid token ❌" });
   }
 };

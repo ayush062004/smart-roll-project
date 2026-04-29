@@ -18,21 +18,25 @@ const AdminLogin = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
- const handleLogin = async (e) => {
-  e.preventDefault();
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-  try {
-    const res = await axios.post(`${API}/api/auth/login`, form);
+    try {
+      await axios.post(
+        `${API}/api/admin/login`,
+        form,
+        { withCredentials: true }
+      );
 
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("admin", "true");
 
-    navigate("/adminDashboard");
+      alert("Admin Login Successful ✅");
 
-  } catch (err) {
-    alert("Login Failed ❌");
-  }
-};
+      navigate("/adminDashboard");
+    } catch (err) {
+      alert(err.response?.data?.msg || "Admin Login failed ❌");
+    }
+  };
 
   return (
     <div className="container-fluid min-vh-100 d-flex p-0 flex-column flex-md-row">

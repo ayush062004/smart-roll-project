@@ -18,9 +18,6 @@ function AddFabric() {
   const [qr, setQr] = useState("");
   const [roll, setRoll] = useState("");
 
-  // ✅ JWT token from localStorage
-  const token = localStorage.getItem("token");
-
   useEffect(() => {
     const resize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", resize);
@@ -28,35 +25,20 @@ function AddFabric() {
   }, []);
 
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async () => {
     try {
-      const res = await axios.post(
-        `${API}/api/fabric/add`,
-        form,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.post(`${API}/api/fabric/add`, form);
 
       setQr(res.data.fabric.qrCode);
       setRoll(res.data.fabric.rollNumber);
 
       alert("Fabric Added ✅");
-
     } catch (err) {
       console.error(err);
-      alert(
-        err.response?.data?.msg ||
-        "Unauthorized / Error ❌"
-      );
+      alert("Error ❌");
     }
   };
 
@@ -68,16 +50,8 @@ function AddFabric() {
         <head>
           <title>Print QR</title>
           <style>
-            body {
-              text-align:center;
-              font-family:Arial;
-              background:#f8fafc;
-              padding:20px;
-            }
-            img {
-              width:250px;
-              margin-top:10px;
-            }
+            body { text-align: center; font-family: Arial; background:#f8fafc; }
+            img { width: 250px; }
           </style>
         </head>
         <body>
@@ -96,19 +70,11 @@ function AddFabric() {
     <div style={container}>
       {/* TOPBAR */}
       <div style={topbar}>
-        <button
-          onClick={() => navigate("/dashboard")}
-          style={backBtn}
-        >
+        <button onClick={() => navigate("/dashboard")} style={backBtn}>
           ⬅ Back
         </button>
 
-        <h2
-          style={{
-            margin: 0,
-            fontSize: isMobile ? "18px" : "24px",
-          }}
-        >
+        <h2 style={{ margin: 0, fontSize: isMobile ? "18px" : "24px" }}>
           ➕ Add Fabric
         </h2>
       </div>
@@ -141,10 +107,7 @@ function AddFabric() {
           style={input}
         />
 
-        <button
-          style={btn}
-          onClick={handleSubmit}
-        >
+        <button style={btn} onClick={handleSubmit}>
           Add Fabric
         </button>
       </div>
@@ -173,10 +136,7 @@ function AddFabric() {
             }}
           />
 
-          <button
-            style={printBtn}
-            onClick={handlePrint}
-          >
+          <button style={printBtn} onClick={handlePrint}>
             🖨 Print QR
           </button>
         </div>
@@ -185,7 +145,7 @@ function AddFabric() {
   );
 }
 
-/* 🎨 UI */
+/* 🎨 BRIGHT THEME STYLES */
 
 const container = {
   padding: "20px",
@@ -226,6 +186,8 @@ const input = {
   borderRadius: "6px",
   border: "1px solid #e2e8f0",
   outline: "none",
+  background: "#fff",
+  color: "#0f172a",
 };
 
 const btn = {

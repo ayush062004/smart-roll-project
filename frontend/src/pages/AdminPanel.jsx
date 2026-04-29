@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 const AdminPanel = () => {
   const navigate = useNavigate();
-
   const [active, setActive] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -16,23 +15,20 @@ const AdminPanel = () => {
 
   return (
     <div style={layout}>
+
       {/* MOBILE HEADER */}
       {isMobile && (
         <div style={mobileHeader}>
-          <button onClick={() => setSidebarOpen(true)} style={menuBtn}>
-            ☰
-          </button>
+          <button onClick={() => setSidebarOpen(true)} style={menuBtn}>☰</button>
           <h3 style={{ margin: 0 }}>⚙️ Admin Panel</h3>
         </div>
       )}
 
       {/* SIDEBAR */}
-      <div
-        style={{
-          ...sidebar,
-          left: isMobile ? (sidebarOpen ? "0" : "-260px") : "0",
-        }}
-      >
+      <div style={{
+        ...sidebar,
+        left: isMobile ? (sidebarOpen ? "0" : "-260px") : "0"
+      }}>
         <h2 style={{ color: "#3b82f6" }}>Fabric Admin</h2>
 
         <MenuItem label="Dashboard" active={active} setActive={setActive} />
@@ -40,13 +36,7 @@ const AdminPanel = () => {
         <MenuItem label="Inventory" active={active} setActive={setActive} />
         <MenuItem label="Reports" active={active} setActive={setActive} />
 
-        <button
-          onClick={() => {
-            localStorage.clear();
-            navigate("/");
-          }}
-          style={logoutBtn}
-        >
+        <button onClick={() => navigate("/")} style={logoutBtn}>
           Logout
         </button>
       </div>
@@ -57,12 +47,11 @@ const AdminPanel = () => {
       )}
 
       {/* MAIN */}
-      <div
-        style={{
-          ...main,
-          marginLeft: isMobile ? "0" : "250px",
-        }}
-      >
+      <div style={{
+        ...main,
+        marginLeft: isMobile ? "0" : "250px"
+      }}>
+
         {active === "dashboard" && (
           <>
             <h2>📊 Dashboard Overview</h2>
@@ -76,7 +65,6 @@ const AdminPanel = () => {
 
             <div style={section}>
               <h3>⚡ Quick Actions</h3>
-
               <div style={actionGrid}>
                 <ActionBtn text="Add User" />
                 <ActionBtn text="Add Fabric" />
@@ -105,23 +93,15 @@ const AdminPanel = () => {
                   <tr>
                     <td>Aman</td>
                     <td>aman@gmail.com</td>
-                    <td>
-                      <Badge type="admin" />
-                    </td>
-                    <td>
-                      <DeleteBtn />
-                    </td>
+                    <td><Badge type="admin" /></td>
+                    <td><DeleteBtn /></td>
                   </tr>
 
                   <tr>
                     <td>Rahul</td>
                     <td>rahul@gmail.com</td>
-                    <td>
-                      <Badge type="user" />
-                    </td>
-                    <td>
-                      <DeleteBtn />
-                    </td>
+                    <td><Badge type="user" /></td>
+                    <td><DeleteBtn /></td>
                   </tr>
                 </tbody>
               </table>
@@ -150,24 +130,16 @@ const AdminPanel = () => {
                     <td>FR-101</td>
                     <td>Cotton</td>
                     <td>120</td>
-                    <td>
-                      <Status type="good" />
-                    </td>
-                    <td>
-                      <DeleteBtn />
-                    </td>
+                    <td><Status type="good" /></td>
+                    <td><DeleteBtn /></td>
                   </tr>
 
                   <tr>
                     <td>FR-102</td>
                     <td>Silk</td>
                     <td>20</td>
-                    <td>
-                      <Status type="low" />
-                    </td>
-                    <td>
-                      <DeleteBtn />
-                    </td>
+                    <td><Status type="low" /></td>
+                    <td><DeleteBtn /></td>
                   </tr>
                 </tbody>
               </table>
@@ -186,13 +158,13 @@ const AdminPanel = () => {
             </div>
           </>
         )}
+
       </div>
     </div>
   );
 };
 
-/* COMPONENTS */
-
+/* COMPONENTS (UNCHANGED) */
 const MenuItem = ({ label, active, setActive }) => {
   const isActive = active.toLowerCase() === label.toLowerCase();
 
@@ -202,7 +174,7 @@ const MenuItem = ({ label, active, setActive }) => {
       style={{
         ...menuItem,
         background: isActive ? "#3b82f6" : "#f1f5f9",
-        color: isActive ? "#fff" : "#0f172a",
+        color: isActive ? "#fff" : "#0f172a"
       }}
     >
       {label}
@@ -217,52 +189,50 @@ const Card = ({ title, value }) => (
   </div>
 );
 
-const ActionBtn = ({ text }) => <div style={actionBtn}>{text}</div>;
+const ActionBtn = ({ text }) => (
+  <div style={actionBtn}>{text}</div>
+);
 
-const DeleteBtn = () => <button style={deleteBtn}>Delete</button>;
+const DeleteBtn = () => (
+  <button style={deleteBtn}>Delete</button>
+);
 
 const Badge = ({ type }) => (
-  <span
-    style={{
-      padding: "5px 10px",
-      borderRadius: "20px",
-      background: type === "admin" ? "#22c55e" : "#3b82f6",
-      color: "#fff",
-    }}
-  >
+  <span style={{
+    padding: "5px 10px",
+    borderRadius: "20px",
+    background: type === "admin" ? "#22c55e" : "#3b82f6",
+    color: "#fff"
+  }}>
     {type}
   </span>
 );
 
 const Status = ({ type }) => {
   const color =
-    type === "good"
-      ? "#22c55e"
-      : type === "low"
-      ? "#facc15"
-      : "#ef4444";
+    type === "good" ? "#22c55e" :
+    type === "low" ? "#facc15" :
+    "#ef4444";
 
   return (
-    <span
-      style={{
-        padding: "5px 10px",
-        borderRadius: "20px",
-        background: color,
-        color: "#000",
-      }}
-    >
+    <span style={{
+      padding: "5px 10px",
+      borderRadius: "20px",
+      background: color,
+      color: "#000"
+    }}>
       {type}
     </span>
   );
 };
 
-/* STYLES */
+/* 🎨 BRIGHT THEME */
 
-const layout = {
+const layout = 
   display: "flex",
   background: "#f8fafc",
   color: "#0f172a",
-  minHeight: "100vh",
+  minHeight: "100vh"
 };
 
 const sidebar = {
@@ -273,21 +243,21 @@ const sidebar = {
   height: "100%",
   transition: "0.3s",
   zIndex: 1000,
-  borderRight: "1px solid #e2e8f0",
+  borderRight: "1px solid #e2e8f0"
 };
 
 const main = {
   flex: 1,
   padding: "20px",
   width: "100%",
-  marginTop: "60px",
+  marginTop: "60px"
 };
 
 const menuItem = {
   padding: "12px",
   marginTop: "10px",
   borderRadius: "8px",
-  cursor: "pointer",
+  cursor: "pointer"
 };
 
 const card = {
@@ -295,25 +265,25 @@ const card = {
   padding: "20px",
   borderRadius: "12px",
   textAlign: "center",
-  boxShadow: "0 5px 15px rgba(0,0,0,0.05)",
+  boxShadow: "0 5px 15px rgba(0,0,0,0.05)"
 };
 
 const grid = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))",
   gap: "15px",
-  marginTop: "20px",
+  marginTop: "20px"
 };
 
 const section = {
-  marginTop: "30px",
+  marginTop: "30px"
 };
 
 const actionGrid = {
   display: "flex",
   gap: "10px",
   marginTop: "10px",
-  flexWrap: "wrap",
+  flexWrap: "wrap"
 };
 
 const actionBtn = {
@@ -321,7 +291,7 @@ const actionBtn = {
   background: "#3b82f6",
   borderRadius: "8px",
   color: "#fff",
-  cursor: "pointer",
+  cursor: "pointer"
 };
 
 const tableBox = {
@@ -330,12 +300,12 @@ const tableBox = {
   background: "#ffffff",
   padding: "10px",
   borderRadius: "10px",
-  boxShadow: "0 5px 15px rgba(0,0,0,0.05)",
+  boxShadow: "0 5px 15px rgba(0,0,0,0.05)"
 };
 
 const table = {
   width: "100%",
-  borderCollapse: "collapse",
+  borderCollapse: "collapse"
 };
 
 const deleteBtn = {
@@ -343,7 +313,7 @@ const deleteBtn = {
   background: "#ef4444",
   border: "none",
   color: "white",
-  borderRadius: "5px",
+  borderRadius: "5px"
 };
 
 const logoutBtn = {
@@ -352,7 +322,7 @@ const logoutBtn = {
   background: "#ef4444",
   border: "none",
   color: "white",
-  borderRadius: "6px",
+  borderRadius: "6px"
 };
 
 const mobileHeader = {
@@ -365,14 +335,14 @@ const mobileHeader = {
   padding: "10px",
   background: "#ffffff",
   zIndex: 1100,
-  borderBottom: "1px solid #e2e8f0",
+  borderBottom: "1px solid #e2e8f0"
 };
 
 const menuBtn = {
   fontSize: "20px",
   background: "none",
   border: "none",
-  color: "#0f172a",
+  color: "#0f172a"
 };
 
 const overlay = {
@@ -380,7 +350,7 @@ const overlay = {
   width: "100%",
   height: "100%",
   background: "rgba(0,0,0,0.3)",
-  zIndex: 999,
+  zIndex: 999
 };
 
 export default AdminPanel;

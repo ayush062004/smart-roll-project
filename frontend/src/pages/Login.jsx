@@ -28,23 +28,27 @@ const Login = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  try {
-    const res = await axios.post(`${API}/api/auth/login`, form);
+    try {
+      const res = await axios.post(
+        `${API}/api/auth/login`,
+        form,
+        { withCredentials: true }
+      );
 
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("user", JSON.stringify(res.data.user));
+      alert(res.data.msg);
 
-    alert("Login Successful ✅");
+      localStorage.setItem('userEmail', form.email);
+      localStorage.setItem('isLoggedIn', 'true');
 
-    navigate("/dashboard");
+      navigate("/dashboard");
 
-  } catch (err) {
-    alert(err.response?.data?.msg || "Login Failed ❌");
-  }
-};
+    } catch (error) {
+      alert(error?.response?.data?.msg || "Login failed ❌");
+    }
+  };
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();

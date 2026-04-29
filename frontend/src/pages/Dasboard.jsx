@@ -17,8 +17,6 @@ import {
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  const API = "https://smart-roll-backend.onrender.com";
-
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -48,7 +46,9 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const statsRes = await fetch(`${API}/api/fabric/stats`);
+        const statsRes = await fetch(
+          "http://localhost:5000/api/fabric/stats"
+        );
         const statsData = await statsRes.json();
 
         setStats({
@@ -59,9 +59,10 @@ const Dashboard = () => {
         });
 
         try {
-          const barRes = await fetch(`${API}/api/fabric/weekly`);
+          const barRes = await fetch(
+            "http://localhost:5000/api/fabric/weekly"
+          );
           const bar = await barRes.json();
-
           setBarData(Array.isArray(bar) ? bar : []);
         } catch {
           setBarData([
@@ -140,17 +141,14 @@ const Dashboard = () => {
           label="🏠 Dashboard"
           onClick={() => goTo("/dashboard")}
         />
-
         <MenuItem
           label="📦 Inventory"
           onClick={() => goTo("/inventory")}
         />
-
         <MenuItem
           label="📱 QR Scanner"
           onClick={() => goTo("/qrscanner")}
         />
-
         <MenuItem
           label="✂️ Cutting"
           onClick={() => goTo("/cutting")}
@@ -208,7 +206,10 @@ const Dashboard = () => {
               <PieChart>
                 <Pie data={pieData} dataKey="value">
                   {pieData.map((_, i) => (
-                    <Cell key={i} fill={COLORS[i]} />
+                    <Cell
+                      key={i}
+                      fill={COLORS[i]}
+                    />
                   ))}
                 </Pie>
 
@@ -230,7 +231,10 @@ const Dashboard = () => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="cuts" fill="#38bdf8" />
+                <Bar
+                  dataKey="cuts"
+                  fill="#38bdf8"
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
