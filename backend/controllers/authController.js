@@ -31,13 +31,13 @@ exports.login = async (req, res) => {
     );
 
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      path: "/",
-      maxAge: 24 * 60 * 60 * 1000
-    });
-
+  httpOnly: true,
+  secure: true,
+  sameSite: "none",
+  path: "/",
+  domain: "smart-roll-backend.onrender.com",
+  maxAge: 24 * 60 * 60 * 1000
+});
     return res.status(200).json({
       msg: "Login successful ✅"
     });
@@ -50,11 +50,12 @@ exports.login = async (req, res) => {
 
 exports.logout = (req, res) => {
   res.clearCookie("token", {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    path: "/"
-  });
+  httpOnly: true,
+  secure: true,
+  sameSite: "none",
+  path: "/",
+  domain: "smart-roll-backend.onrender.com"
+});
 
   return res.json({ msg: "Logout successful ✅" });
 };
