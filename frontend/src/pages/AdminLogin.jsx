@@ -79,8 +79,7 @@ const AdminLogin = () => {
       );
 
       // ✅ force redirect
-      window.location.href =
-        "/adminDashboard";
+     navigate("/adminDashboard", { replace: true });
 
     } catch (err) {
       alert(
