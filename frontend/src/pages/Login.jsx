@@ -8,6 +8,8 @@ const Login = () => {
 
   const navigate = useNavigate();
 
+  const API = "https://smart-roll-backend.onrender.com";
+
   const [form, setForm] = useState({
     email: '',
     password: ''
@@ -32,7 +34,7 @@ const Login = () => {
 
     try {
       const res = await axios.post(
-        'http://localhost:5000/api/auth/login',
+        `${API}/api/auth/login`,
         form,
         { withCredentials: true }
       );
@@ -54,7 +56,7 @@ const Login = () => {
 
     try {
       const res = await axios.post(
-        'http://localhost:5000/api/examinee/forgot-password',
+        `${API}/api/examinee/forgot-password`,
         { email: forgotEmail }
       );
 
@@ -105,7 +107,7 @@ const Login = () => {
       {/* RIGHT SIDE */}
       <div
         className="col-12 col-md-6 d-flex align-items-center justify-content-center"
-        style={{ background: "#f1f5f9", padding: "20px" }}   // 🔥 LIGHT BG
+        style={{ background: "#f1f5f9", padding: "20px" }}
       >
 
         <div className="glass-card">
@@ -144,6 +146,14 @@ const Login = () => {
                   Login
                 </button>
 
+                <button
+                  type="button"
+                  className="btn btn-link w-100 text-decoration-none"
+                  onClick={() => setShowForgot(true)}
+                >
+                  Forgot Password?
+                </button>
+
               </form>
             </>
           ) : (
@@ -157,6 +167,7 @@ const Login = () => {
                   value={forgotEmail}
                   onChange={(e) => setForgotEmail(e.target.value)}
                   className="form-control custom-input mb-3"
+                  required
                 />
 
                 <button className="custom-btn w-100 mb-2">
@@ -173,6 +184,7 @@ const Login = () => {
               </form>
             </>
           )}
+
         </div>
       </div>
 
@@ -182,7 +194,7 @@ const Login = () => {
           max-width: 400px;
           padding: 30px;
           border-radius: 16px;
-          background: #ffffff; /* 🔥 PURE WHITE CARD */
+          background: #ffffff;
           border: 1px solid #e2e8f0;
           box-shadow: 0 10px 30px rgba(0,0,0,0.08);
         }

@@ -10,6 +10,8 @@ const Cutting = () => {
   const [rolls, setRolls] = useState([]);
   const [history, setHistory] = useState([]);
 
+  const API = "https://smart-roll-backend.onrender.com";
+
   useEffect(() => {
     fetchFabrics();
     fetchHistory();
@@ -17,7 +19,7 @@ const Cutting = () => {
 
   const fetchFabrics = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/fabric");
+      const res = await axios.get(`${API}/api/fabric`);
       setRolls(res.data);
     } catch (err) {
       console.error("Fetch error:", err);
@@ -27,7 +29,7 @@ const Cutting = () => {
   const fetchHistory = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/fabric/cut-history",
+        `${API}/api/fabric/cut-history`,
         { withCredentials: true }
       );
       setHistory(res.data);
@@ -53,7 +55,7 @@ const Cutting = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/fabric/cut",
+        `${API}/api/fabric/cut`,
         {
           id: roll,
           cutLength: cutLength

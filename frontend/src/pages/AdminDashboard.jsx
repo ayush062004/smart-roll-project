@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+const API = "https://smart-roll-backend.onrender.com";
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
 
@@ -37,11 +39,11 @@ const AdminDashboard = () => {
       fetchUsers();
       fetchInventory();
     }
-  }, []);
+  }, [navigate]);
 
   const fetchCuts = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/cuts", {
+      const res = await axios.get(`${API}/api/admin/cuts`, {
         withCredentials: true,
       });
       setCuts(res.data);
@@ -50,17 +52,16 @@ const AdminDashboard = () => {
 
   const fetchStats = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:5000/api/admin/dashboard-stats",
-        { withCredentials: true }
-      );
+      const res = await axios.get(`${API}/api/admin/dashboard-stats`, {
+        withCredentials: true,
+      });
       setStats(res.data);
     } catch {}
   };
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/users", {
+      const res = await axios.get(`${API}/api/admin/users`, {
         withCredentials: true,
       });
       setUsers(res.data);
@@ -69,7 +70,7 @@ const AdminDashboard = () => {
 
   const fetchInventory = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/inventory", {
+      const res = await axios.get(`${API}/api/admin/inventory`, {
         withCredentials: true,
       });
       setInventory(res.data);
@@ -84,11 +85,9 @@ const AdminDashboard = () => {
     e.preventDefault();
 
     try {
-      await axios.post(
-        "http://localhost:5000/api/admin/create-user",
-        form,
-        { withCredentials: true }
-      );
+      await axios.post(`${API}/api/admin/create-user`, form, {
+        withCredentials: true,
+      });
 
       alert("User Created ✅");
       setForm({ name: "", email: "", password: "" });
@@ -101,10 +100,9 @@ const AdminDashboard = () => {
   const deleteUser = async (id) => {
     if (!window.confirm("Delete this user?")) return;
 
-    await axios.delete(
-      `http://localhost:5000/api/admin/user/${id}`,
-      { withCredentials: true }
-    );
+    await axios.delete(`${API}/api/admin/user/${id}`, {
+      withCredentials: true,
+    });
 
     fetchUsers();
   };
@@ -112,10 +110,9 @@ const AdminDashboard = () => {
   const handleInvDelete = async (id) => {
     if (!window.confirm("Delete fabric?")) return;
 
-    await axios.delete(
-      `http://localhost:5000/api/admin/inventory/${id}`,
-      { withCredentials: true }
-    );
+    await axios.delete(`${API}/api/admin/inventory/${id}`, {
+      withCredentials: true,
+    });
 
     fetchInventory();
   };
@@ -124,11 +121,10 @@ const AdminDashboard = () => {
     const value = prompt("Enter length:");
     if (!value || isNaN(value)) return;
 
-    const newLength =
-      Number(item.availableLength) + Number(value);
+    const newLength = Number(item.availableLength) + Number(value);
 
     await axios.put(
-      `http://localhost:5000/api/admin/inventory/${item._id}`,
+      `${API}/api/admin/inventory/${item._id}`,
       { availableLength: newLength },
       { withCredentials: true }
     );
@@ -143,7 +139,6 @@ const AdminDashboard = () => {
 
   return (
     <div style={styles.container}>
-      {/* MOBILE TOPBAR */}
       {isMobile && (
         <div style={styles.mobileTop}>
           <button
@@ -156,7 +151,6 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* OVERLAY */}
       {isMobile && sidebarOpen && (
         <div
           style={styles.overlay}
@@ -164,44 +158,27 @@ const AdminDashboard = () => {
         />
       )}
 
-      {/* SIDEBAR */}
       <div
         style={{
           ...styles.sidebar,
-          left: isMobile
-            ? sidebarOpen
-              ? "0"
-              : "-260px"
-            : "0",
+          left: isMobile ? (sidebarOpen ? "0" : "-260px") : "0",
         }}
       >
         <h2 style={{ color: "#3b82f6" }}>🧵 FabricSys</h2>
 
-        <button
-          onClick={() => changeTab("cuts")}
-          style={styles.btn}
-        >
+        <button onClick={() => changeTab("cuts")} style={styles.btn}>
           📊 Cuts
         </button>
 
-        <button
-          onClick={() => changeTab("inventory")}
-          style={styles.btn}
-        >
+        <button onClick={() => changeTab("inventory")} style={styles.btn}>
           📦 Inventory
         </button>
 
-        <button
-          onClick={() => changeTab("create")}
-          style={styles.btn}
-        >
+        <button onClick={() => changeTab("create")} style={styles.btn}>
           ➕ Create
         </button>
 
-        <button
-          onClick={() => changeTab("users")}
-          style={styles.btn}
-        >
+        <button onClick={() => changeTab("users")} style={styles.btn}>
           👥 Users
         </button>
 
@@ -216,7 +193,6 @@ const AdminDashboard = () => {
         </button>
       </div>
 
-      {/* MAIN */}
       <div
         style={{
           ...styles.main,
@@ -225,7 +201,6 @@ const AdminDashboard = () => {
       >
         <h2>🚀 Admin Dashboard</h2>
 
-        {/* STATS */}
         <div
           style={{
             ...styles.cards,
@@ -234,25 +209,12 @@ const AdminDashboard = () => {
               : "repeat(4,1fr)",
           }}
         >
-          <Card
-            title="Total"
-            value={stats?.totalRolls || 0}
-          />
-          <Card
-            title="Used"
-            value={stats?.usedRolls || 0}
-          />
-          <Card
-            title="Available"
-            value={stats?.availableRolls || 0}
-          />
-          <Card
-            title="Damaged"
-            value={stats?.damaged || 0}
-          />
+          <Card title="Total" value={stats?.totalRolls || 0} />
+          <Card title="Used" value={stats?.usedRolls || 0} />
+          <Card title="Available" value={stats?.availableRolls || 0} />
+          <Card title="Damaged" value={stats?.damaged || 0} />
         </div>
 
-        {/* CUTS */}
         {activeTab === "cuts" && (
           <TableWrapper title="Cut History">
             <thead>
@@ -263,25 +225,19 @@ const AdminDashboard = () => {
                 <th>Date</th>
               </tr>
             </thead>
-
             <tbody>
               {cuts.map((c) => (
                 <tr key={c._id}>
                   <td>{c.rollNumber}</td>
                   <td>{c.cutLength}</td>
                   <td>{c.remainingLength}</td>
-                  <td>
-                    {new Date(
-                      c.createdAt
-                    ).toLocaleString()}
-                  </td>
+                  <td>{new Date(c.createdAt).toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>
           </TableWrapper>
         )}
 
-        {/* INVENTORY */}
         {activeTab === "inventory" && (
           <TableWrapper title="Inventory">
             <thead>
@@ -292,7 +248,6 @@ const AdminDashboard = () => {
                 <th>Action</th>
               </tr>
             </thead>
-
             <tbody>
               {inventory.map((i) => (
                 <tr key={i._id}>
@@ -302,18 +257,14 @@ const AdminDashboard = () => {
                   <td>
                     <button
                       style={styles.smallBtn}
-                      onClick={() =>
-                        handleAddLength(i)
-                      }
+                      onClick={() => handleAddLength(i)}
                     >
                       ＋
                     </button>
 
                     <button
                       style={styles.deleteBtn}
-                      onClick={() =>
-                        handleInvDelete(i._id)
-                      }
+                      onClick={() => handleInvDelete(i._id)}
                     >
                       🗑
                     </button>
@@ -324,7 +275,6 @@ const AdminDashboard = () => {
           </TableWrapper>
         )}
 
-        {/* USERS */}
         {activeTab === "users" && (
           <TableWrapper title="Users">
             <thead>
@@ -334,7 +284,6 @@ const AdminDashboard = () => {
                 <th>Action</th>
               </tr>
             </thead>
-
             <tbody>
               {users.map((u) => (
                 <tr key={u._id}>
@@ -343,9 +292,7 @@ const AdminDashboard = () => {
                   <td>
                     <button
                       style={styles.deleteBtn}
-                      onClick={() =>
-                        deleteUser(u._id)
-                      }
+                      onClick={() => deleteUser(u._id)}
                     >
                       Delete
                     </button>
@@ -356,15 +303,11 @@ const AdminDashboard = () => {
           </TableWrapper>
         )}
 
-        {/* CREATE */}
         {activeTab === "create" && (
           <div style={styles.card}>
             <h3>Create User</h3>
 
-            <form
-              onSubmit={createUser}
-              style={styles.form}
-            >
+            <form onSubmit={createUser} style={styles.form}>
               <input
                 name="name"
                 placeholder="Name"
@@ -386,9 +329,7 @@ const AdminDashboard = () => {
                 style={styles.input}
               />
 
-              <button style={styles.button}>
-                Create
-              </button>
+              <button style={styles.button}>Create</button>
             </form>
           </div>
         )}
@@ -397,11 +338,9 @@ const AdminDashboard = () => {
   );
 };
 
-/* TABLE */
 const TableWrapper = ({ title, children }) => (
   <div style={styles.card}>
     <h3>{title}</h3>
-
     <div style={{ overflowX: "auto" }}>
       <table style={styles.table}>{children}</table>
     </div>
@@ -415,7 +354,6 @@ const Card = ({ title, value }) => (
   </div>
 );
 
-/* STYLES */
 const styles = {
   container: {
     display: "flex",
@@ -423,7 +361,6 @@ const styles = {
     minHeight: "100vh",
     color: "#0f172a",
   },
-
   sidebar: {
     width: "250px",
     background: "#fff",
@@ -438,7 +375,6 @@ const styles = {
     display: "flex",
     flexDirection: "column",
   },
-
   overlay: {
     position: "fixed",
     top: 0,
@@ -448,13 +384,11 @@ const styles = {
     background: "rgba(0,0,0,0.4)",
     zIndex: 1500,
   },
-
   main: {
     flex: 1,
     padding: "20px",
     marginTop: "70px",
   },
-
   btn: {
     padding: "10px",
     marginTop: "10px",
@@ -464,7 +398,6 @@ const styles = {
     cursor: "pointer",
     textAlign: "left",
   },
-
   logout: {
     marginTop: "auto",
     padding: "10px",
@@ -474,13 +407,11 @@ const styles = {
     color: "#fff",
     cursor: "pointer",
   },
-
   cards: {
     display: "grid",
     gap: "15px",
     marginTop: "20px",
   },
-
   stat: {
     background: "#fff",
     padding: "15px",
@@ -488,7 +419,6 @@ const styles = {
     textAlign: "center",
     boxShadow: "0 5px 15px rgba(0,0,0,0.05)",
   },
-
   card: {
     background: "#fff",
     padding: "15px",
@@ -496,24 +426,20 @@ const styles = {
     marginTop: "20px",
     boxShadow: "0 5px 15px rgba(0,0,0,0.05)",
   },
-
   table: {
     width: "100%",
     borderCollapse: "collapse",
   },
-
   form: {
     display: "flex",
     flexDirection: "column",
     gap: "10px",
   },
-
   input: {
     padding: "10px",
     border: "1px solid #e2e8f0",
     borderRadius: "6px",
   },
-
   button: {
     padding: "10px",
     border: "none",
@@ -523,7 +449,6 @@ const styles = {
     fontWeight: "bold",
     cursor: "pointer",
   },
-
   smallBtn: {
     marginRight: "8px",
     border: "none",
@@ -531,7 +456,6 @@ const styles = {
     borderRadius: "6px",
     cursor: "pointer",
   },
-
   deleteBtn: {
     border: "none",
     padding: "6px 10px",
@@ -540,7 +464,6 @@ const styles = {
     background: "#ef4444",
     color: "#fff",
   },
-
   mobileTop: {
     position: "fixed",
     top: 0,
@@ -555,7 +478,6 @@ const styles = {
     padding: "0 15px",
     boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
   },
-
   menuBtn: {
     background: "none",
     border: "none",

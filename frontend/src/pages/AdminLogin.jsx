@@ -4,12 +4,14 @@ import { FaGithub, FaWhatsapp, FaTwitter } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+const API = "https://smart-roll-backend.onrender.com";
+
 const AdminLogin = () => {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
   const handleChange = (e) => {
@@ -20,8 +22,8 @@ const AdminLogin = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/admin/login",
+      await axios.post(
+        `${API}/api/admin/login`,
         form,
         { withCredentials: true }
       );
@@ -31,7 +33,6 @@ const AdminLogin = () => {
       alert("Admin Login Successful ✅");
 
       navigate("/adminDashboard");
-
     } catch (err) {
       alert(err.response?.data?.msg || "Admin Login failed ❌");
     }
@@ -39,7 +40,6 @@ const AdminLogin = () => {
 
   return (
     <div className="container-fluid min-vh-100 d-flex p-0 flex-column flex-md-row">
-
       {/* LEFT SIDE */}
       <div
         className="col-12 col-md-6 d-flex flex-column justify-content-center align-items-center text-white"
@@ -48,7 +48,7 @@ const AdminLogin = () => {
             "url('https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          minHeight: "40vh"
+          minHeight: "40vh",
         }}
       >
         <div
@@ -56,7 +56,7 @@ const AdminLogin = () => {
             background: "rgba(0,0,0,0.5)",
             padding: "20px",
             borderRadius: "10px",
-            textAlign: "center"
+            textAlign: "center",
           }}
         >
           <h1 className="fw-bold mb-3">Admin Control Panel ⚙️</h1>
@@ -69,17 +69,17 @@ const AdminLogin = () => {
       {/* RIGHT SIDE */}
       <div
         className="col-12 col-md-6 d-flex align-items-center justify-content-center"
-        style={{ background: "#f8fafc", padding: "20px" }}   // 🔥 bright bg
+        style={{ background: "#f8fafc", padding: "20px" }}
       >
-
         <div className="glass-card">
-
-          <h2 className="text-center mb-4 fw-bold" style={{ color: "#0f172a" }}>
+          <h2
+            className="text-center mb-4 fw-bold"
+            style={{ color: "#0f172a" }}
+          >
             Admin Login
           </h2>
 
           <form onSubmit={handleLogin}>
-
             <div className="mb-3">
               <input
                 name="email"
@@ -107,15 +107,16 @@ const AdminLogin = () => {
             <button type="submit" className="custom-btn w-100 mb-3">
               Login as Admin
             </button>
-
           </form>
 
-          <div className="d-flex justify-content-center gap-3 mt-3 fs-5" style={{ color: "#0f172a" }}>
+          <div
+            className="d-flex justify-content-center gap-3 mt-3 fs-5"
+            style={{ color: "#0f172a" }}
+          >
             <FaGithub />
             <FaWhatsapp />
             <FaTwitter />
           </div>
-
         </div>
       </div>
 
@@ -125,7 +126,7 @@ const AdminLogin = () => {
           max-width: 400px;
           padding: 30px;
           border-radius: 15px;
-          background: #ffffff; /* 🔥 white card */
+          background: #ffffff;
           border: 1px solid #e2e8f0;
           box-shadow: 0 8px 25px rgba(0,0,0,0.08);
         }
@@ -160,7 +161,6 @@ const AdminLogin = () => {
           color: #64748b !important;
         }
       `}</style>
-
     </div>
   );
 };

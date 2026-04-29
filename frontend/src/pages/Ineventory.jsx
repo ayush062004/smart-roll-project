@@ -5,6 +5,8 @@ import axios from "axios";
 const Inventory = () => {
   const navigate = useNavigate();
 
+  const API = "https://smart-roll-backend.onrender.com";
+
   const [items, setItems] = useState([]);
   const [history, setHistory] = useState([]);
   const [stats, setStats] = useState({
@@ -22,12 +24,13 @@ const Inventory = () => {
 
     const resize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", resize);
+
     return () => window.removeEventListener("resize", resize);
   }, []);
 
   const fetchFabrics = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/fabric");
+      const res = await axios.get(`${API}/api/fabric`);
 
       setItems(res.data);
 
@@ -47,7 +50,6 @@ const Inventory = () => {
         low,
         out
       });
-
     } catch (err) {
       console.error(err);
     }
@@ -55,7 +57,7 @@ const Inventory = () => {
 
   const fetchHistory = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/fabric/history");
+      const res = await axios.get(`${API}/api/fabric/history`);
       setHistory(res.data);
     } catch (err) {
       console.error(err);
@@ -79,7 +81,7 @@ const Inventory = () => {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/fabric/add-length", {
+      await axios.post(`${API}/api/fabric/add-length`, {
         id,
         length
       });
@@ -88,7 +90,6 @@ const Inventory = () => {
 
       fetchFabrics();
       fetchHistory();
-
     } catch (err) {
       alert("Error ❌");
     }
@@ -98,13 +99,12 @@ const Inventory = () => {
     if (!window.confirm("Delete this roll?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/fabric/${item._id}`);
+      await axios.delete(`${API}/api/fabric/${item._id}`);
 
       alert("Deleted 🗑");
 
       fetchFabrics();
       fetchHistory();
-
     } catch (err) {
       alert("Delete failed ❌");
     }
@@ -112,22 +112,22 @@ const Inventory = () => {
 
   return (
     <div style={container}>
-
       {/* HEADER */}
       <div style={topBar}>
         <button style={backBtn} onClick={() => navigate("/dashboard")}>
           ← Back
         </button>
-        <h2>
-          📦 Smart Inventory System
-        </h2>
+
+        <h2>📦 Smart Inventory System</h2>
       </div>
 
       {/* STATS */}
-      <div style={{
-        ...statsGrid,
-        gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4,1fr)"
-      }}>
+      <div
+        style={{
+          ...statsGrid,
+          gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4,1fr)"
+        }}
+      >
         <StatCard title="Total" value={stats.total} />
         <StatCard title="Available" value={stats.available} />
         <StatCard title="Low Stock" value={stats.low} />
@@ -152,6 +152,7 @@ const Inventory = () => {
             <tbody>
               {items.map((item) => {
                 let status = "Available";
+
                 if (item.availableLength === 0) status = "Out";
                 else if (item.availableLength < 20) status = "Low";
 
@@ -215,18 +216,23 @@ const Inventory = () => {
                   <td style={td}>{h.rollNumber}</td>
 
                   <td style={td}>
-                    <span style={{
-                      color:
-                        h.action === "ADD" ? "#16a34a" :
-                        h.action === "CUT" ? "#ca8a04" :
-                        "#dc2626"
-                    }}>
+                    <span
+                      style={{
+                        color:
+                          h.action === "ADD"
+                            ? "#16a34a"
+                            : h.action === "CUT"
+                            ? "#ca8a04"
+                            : "#dc2626"
+                      }}
+                    >
                       {h.action}
                     </span>
                   </td>
 
                   <td style={td}>{h.length}</td>
                   <td style={td}>{h.remainingLength}</td>
+
                   <td style={td}>
                     {new Date(h.createdAt).toLocaleString()}
                   </td>
@@ -236,7 +242,6 @@ const Inventory = () => {
           </table>
         </div>
       </div>
-
     </div>
   );
 };
@@ -257,12 +262,20 @@ const getStatusStyle = (status) => {
     color: "#fff"
   };
 
-  if (status === "Available") return { ...base, background: "#22c55e" };
-  if (status === "Low") return { ...base, background: "#facc15", color: "#000" };
+  if (status === "Available")
+    return { ...base, background: "#22c55e" };
+
+  if (status === "Low")
+    return {
+      ...base,
+      background: "#facc15",
+      color: "#000"
+    };
+
   return { ...base, background: "#ef4444" };
 };
 
-/* STYLES (🔥 BRIGHT) */
+/* STYLES */
 const container = {
   padding: "20px",
   background: "#f1f5f9",
@@ -321,10 +334,23 @@ const historyBox = {
   boxShadow: "0 5px 15px rgba(0,0,0,0.05)"
 };
 
-const table = { width: "100%" };
-const th = { padding: "10px", textAlign: "left" };
-const td = { padding: "10px" };
-const tr = { borderBottom: "1px solid #e2e8f0" };
+const table = {
+  width: "100%"
+};
+
+const th = {
+  padding: "10px",
+  textAlign: "left"
+};
+
+const td = {
+  padding: "10px"
+};
+
+const tr = {
+  borderBottom: "1px solid #e2e8f0"
+};
+
 const theadRow = {};
 
 const actionWrap = {
@@ -338,7 +364,8 @@ const addBtn = {
   border: "none",
   padding: "6px 10px",
   borderRadius: "6px",
-  color: "#fff"
+  color: "#fff",
+  cursor: "pointer"
 };
 
 const deleteBtn = {
@@ -346,7 +373,8 @@ const deleteBtn = {
   border: "none",
   padding: "6px 10px",
   borderRadius: "6px",
-  color: "white"
+  color: "#fff",
+  cursor: "pointer"
 };
 
 export default Inventory;

@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 const QRScanner = () => {
   const navigate = useNavigate();
 
+  const API = "https://smart-roll-backend.onrender.com";
+
   const [fabric, setFabric] = useState(null);
   const [scannerOn, setScannerOn] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -14,6 +16,7 @@ const QRScanner = () => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
+
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -24,7 +27,10 @@ const QRScanner = () => {
     setTimeout(() => {
       const scanner = new Html5QrcodeScanner(
         "reader",
-        { fps: 10, qrbox: isMobile ? 200 : 250 },
+        {
+          fps: 10,
+          qrbox: isMobile ? 200 : 250
+        },
         false
       );
 
@@ -34,7 +40,7 @@ const QRScanner = () => {
             const parsed = JSON.parse(result);
 
             const res = await axios.get(
-              `http://localhost:5000/api/fabric/qr/${parsed.rollNumber}`
+              `${API}/api/fabric/qr/${parsed.rollNumber}`
             );
 
             setFabric(res.data);
@@ -57,7 +63,7 @@ const QRScanner = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/fabric/cut",
+        `${API}/api/fabric/cut`,
         {
           id: fabric._id,
           cutLength: Number(cutLength)
@@ -65,7 +71,7 @@ const QRScanner = () => {
       );
 
       alert("Cut Successful ✂️");
-      setFabric(res.data.fabric);
+      setFabric(res.data.fabric || res.data);
     } catch (err) {
       console.error(err);
       alert("Cut failed ❌");
@@ -77,7 +83,10 @@ const QRScanner = () => {
 
       {/* TOPBAR */}
       <div style={topbar}>
-        <button onClick={() => navigate("/dashboard")} style={backBtn}>
+        <button
+          onClick={() => navigate("/dashboard")}
+          style={backBtn}
+        >
           ⬅ Back
         </button>
 
@@ -120,7 +129,6 @@ const QRScanner = () => {
 
           <p><b>Roll ID:</b> {fabric.rollNumber}</p>
           <p><b>Name:</b> {fabric.name}</p>
-
           <p><b>Total:</b> {fabric.totalLength} meters</p>
 
           <p style={{ color: "#16a34a" }}>
@@ -128,10 +136,14 @@ const QRScanner = () => {
           </p>
 
           <p style={{ color: "#dc2626" }}>
-            <b>Used:</b> {fabric.totalLength - fabric.availableLength} meters
+            <b>Used:</b>{" "}
+            {fabric.totalLength - fabric.availableLength} meters
           </p>
 
-          <button onClick={handleCut} style={cutBtn}>
+          <button
+            onClick={handleCut}
+            style={cutBtn}
+          >
             ✂️ Cut Fabric
           </button>
         </div>
@@ -141,7 +153,9 @@ const QRScanner = () => {
       <div
         style={{
           ...infoGrid,
-          gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)"
+          gridTemplateColumns: isMobile
+            ? "1fr"
+            : "repeat(3,1fr)"
         }}
       >
         <div style={infoCard}>
@@ -164,7 +178,7 @@ const QRScanner = () => {
   );
 };
 
-/* 🎨 BRIGHT THEME STYLES */
+/* 🎨 STYLES */
 
 const container = {
   padding: "20px",

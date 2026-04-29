@@ -4,19 +4,15 @@ import { useNavigate } from "react-router-dom";
 const Landing = () => {
   const navigate = useNavigate();
 
-  // 🔥 Carousel images (UNCHANGED)
-const images = [
-  "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=1400&q=80",
-  // 🧵 fabric rolls / textile material close-up
+  const images = [
+    "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=1400&q=80",
+    "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=1400&q=80",
+    "https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?auto=format&fit=crop&w=1400&q=80"
+  ];
 
-  "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=1400&q=80",
-  // 🎨 fabric design / textile patterns
-
-  "https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?auto=format&fit=crop&w=1400&q=80"
-  // 🧶 soft textile production / cloth handling
-];
   const [bgIndex, setBgIndex] = useState(0);
   const [loaded, setLoaded] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -26,23 +22,43 @@ const images = [
         setBgIndex((prev) => (prev + 1) % images.length);
         setLoaded(true);
       }, 200);
-    }, 2000);
+    }, 2500);
 
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const resize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", resize);
+
+    return () => window.removeEventListener("resize", resize);
+  }, []);
+
   return (
     <div style={styles.container}>
-
       {/* NAVBAR */}
-      <div style={styles.navbar}>
+      <div
+        style={{
+          ...styles.navbar,
+          padding: isMobile ? "15px 20px" : "20px 40px",
+          flexWrap: "wrap",
+          gap: "10px"
+        }}
+      >
         <h2 style={styles.logo}>🧵 FabricSys</h2>
 
         <div style={styles.navActions}>
-          <button style={styles.loginBtn} onClick={() => navigate("/login")}>
+          <button
+            style={styles.loginBtn}
+            onClick={() => navigate("/login")}
+          >
             Login
           </button>
-          <button style={styles.adminBtn} onClick={() => navigate("/adminlogin")}>
+
+          <button
+            style={styles.adminBtn}
+            onClick={() => navigate("/adminlogin")}
+          >
             Admin
           </button>
         </div>
@@ -52,54 +68,112 @@ const images = [
       <div
         style={{
           ...styles.hero,
+          padding: isMobile ? "50px 20px" : "80px 40px",
+          flexDirection: isMobile ? "column" : "row",
           backgroundImage: `url(${images[bgIndex]})`,
-          opacity: loaded ? 1 : 0.7,
+          opacity: loaded ? 1 : 0.7
         }}
       >
-        <div style={styles.overlay} />
+        <div style={styles.overlay}></div>
 
-        <div style={styles.heroText}>
-          <h1 style={styles.title}>
+        <div
+          style={{
+            ...styles.heroText,
+            maxWidth: isMobile ? "100%" : "500px",
+            textAlign: isMobile ? "center" : "left"
+          }}
+        >
+          <h1
+            style={{
+              ...styles.title,
+              fontSize: isMobile ? "30px" : "42px"
+            }}
+          >
             Smart Fabric Management System
           </h1>
 
           <p style={styles.subtitle}>
-            Track inventory, scan QR, manage cutting & monitor usage — all in one powerful dashboard.
+            Track inventory, scan QR, manage cutting &
+            monitor usage — all in one powerful dashboard.
           </p>
 
-          <div style={styles.heroBtns}>
-            <button style={styles.primaryBtn} onClick={() => navigate("/login")}>
+          <div
+            style={{
+              ...styles.heroBtns,
+              justifyContent: isMobile ? "center" : "flex-start",
+              flexWrap: "wrap"
+            }}
+          >
+            <button
+              style={styles.primaryBtn}
+              onClick={() => navigate("/login")}
+            >
               Get Started
             </button>
 
-            <button style={styles.secondaryBtn} onClick={() => navigate("/adminlogin")}>
+            <button
+              style={styles.secondaryBtn}
+              onClick={() => navigate("/adminlogin")}
+            >
               Admin Panel
             </button>
           </div>
         </div>
 
-        <div style={styles.heroCard}>
+        <div
+          style={{
+            ...styles.heroCard,
+            marginTop: isMobile ? "25px" : "0"
+          }}
+        >
           <h3>📊 Live Insights</h3>
           <p>Track usage, inventory & cutting in real-time</p>
         </div>
       </div>
 
       {/* FEATURES */}
-      <div style={styles.section}>
+      <div
+        style={{
+          ...styles.section,
+          padding: isMobile ? "40px 20px" : "60px 40px"
+        }}
+      >
         <h2 style={styles.sectionTitle}>✨ Features</h2>
 
         <div style={styles.grid}>
-          <Feature title="📦 Inventory Tracking" desc="Manage all fabric rolls with real-time stock updates" />
-          <Feature title="📱 QR Scanning" desc="Scan QR codes to instantly access fabric details" />
-          <Feature title="✂️ Smart Cutting" desc="Track fabric usage and prevent over-cutting" />
-          <Feature title="📊 Analytics" desc="View insights with charts & reports" />
+          <Feature
+            title="📦 Inventory Tracking"
+            desc="Manage all fabric rolls with real-time stock updates"
+          />
+
+          <Feature
+            title="📱 QR Scanning"
+            desc="Scan QR codes to instantly access fabric details"
+          />
+
+          <Feature
+            title="✂️ Smart Cutting"
+            desc="Track fabric usage and prevent over-cutting"
+          />
+
+          <Feature
+            title="📊 Analytics"
+            desc="View insights with charts & reports"
+          />
         </div>
       </div>
 
       {/* CTA */}
       <div style={styles.cta}>
         <h2>Ready to streamline your fabric management?</h2>
-        <button style={styles.primaryBtn} onClick={() => navigate("/login")}>
+
+        <button
+          style={{
+            ...styles.primaryBtn,
+            marginTop: "15px"
+          }}
+          onClick={() => navigate("/login")}
+        >
           Start Now 🚀
         </button>
       </div>
@@ -108,12 +182,11 @@ const images = [
       <div style={styles.footer}>
         <p>© 2026 FabricSys. All rights reserved.</p>
       </div>
-
     </div>
   );
 };
 
-/* FEATURE */
+/* FEATURE CARD */
 const Feature = ({ title, desc }) => (
   <div style={styles.featureCard}>
     <h4>{title}</h4>
@@ -121,7 +194,7 @@ const Feature = ({ title, desc }) => (
   </div>
 );
 
-/* STYLES (UNCHANGED) */
+/* STYLES */
 const styles = {
   container: {
     fontFamily: "sans-serif",
@@ -134,7 +207,6 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "20px 40px",
     background: "#ffffff",
     boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
     position: "sticky",
@@ -142,9 +214,15 @@ const styles = {
     zIndex: 100
   },
 
-  logo: { color: "#3b82f6" },
+  logo: {
+    color: "#3b82f6",
+    margin: 0
+  },
 
-  navActions: { display: "flex", gap: "10px" },
+  navActions: {
+    display: "flex",
+    gap: "10px"
+  },
 
   loginBtn: {
     padding: "8px 16px",
@@ -169,11 +247,11 @@ const styles = {
     flexWrap: "wrap",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: "80px 40px",
     backgroundSize: "cover",
     backgroundPosition: "center",
     color: "white",
-    transition: "opacity 0.5s ease-in-out, background-image 1s ease-in-out"
+    transition:
+      "opacity 0.5s ease-in-out, background-image 1s ease-in-out"
   },
 
   overlay: {
@@ -187,15 +265,23 @@ const styles = {
 
   heroText: {
     position: "relative",
-    maxWidth: "500px",
     zIndex: 1
   },
 
-  title: { fontSize: "42px", marginBottom: "15px" },
+  title: {
+    marginBottom: "15px"
+  },
 
-  subtitle: { fontSize: "16px", marginBottom: "20px", opacity: 0.9 },
+  subtitle: {
+    fontSize: "16px",
+    marginBottom: "20px",
+    opacity: 0.9
+  },
 
-  heroBtns: { display: "flex", gap: "10px" },
+  heroBtns: {
+    display: "flex",
+    gap: "10px"
+  },
 
   primaryBtn: {
     padding: "12px 20px",
@@ -223,16 +309,20 @@ const styles = {
     color: "#000",
     padding: "25px",
     borderRadius: "12px",
-    marginTop: "20px"
+    maxWidth: "280px"
   },
 
-  section: { padding: "60px 40px" },
+  section: {},
 
-  sectionTitle: { textAlign: "center", marginBottom: "30px" },
+  sectionTitle: {
+    textAlign: "center",
+    marginBottom: "30px"
+  },
 
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
+    gridTemplateColumns:
+      "repeat(auto-fit,minmax(220px,1fr))",
     gap: "20px"
   },
 
@@ -253,8 +343,7 @@ const styles = {
   footer: {
     textAlign: "center",
     padding: "20px",
-    background: "#ffffff",
-    marginTop: "20px"
+    background: "#ffffff"
   }
 };
 

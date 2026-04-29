@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+const API = "https://smart-roll-backend.onrender.com";
+
 function AddFabric() {
   const navigate = useNavigate();
 
@@ -10,7 +12,7 @@ function AddFabric() {
   const [form, setForm] = useState({
     name: "",
     totalLength: "",
-    type: ""
+    type: "",
   });
 
   const [qr, setQr] = useState("");
@@ -28,16 +30,12 @@ function AddFabric() {
 
   const handleSubmit = async () => {
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/fabric/add",
-        form
-      );
+      const res = await axios.post(`${API}/api/fabric/add`, form);
 
       setQr(res.data.fabric.qrCode);
       setRoll(res.data.fabric.rollNumber);
 
       alert("Fabric Added ✅");
-
     } catch (err) {
       console.error(err);
       alert("Error ❌");
@@ -70,7 +68,6 @@ function AddFabric() {
 
   return (
     <div style={container}>
-
       {/* TOPBAR */}
       <div style={topbar}>
         <button onClick={() => navigate("/dashboard")} style={backBtn}>
@@ -83,10 +80,12 @@ function AddFabric() {
       </div>
 
       {/* FORM */}
-      <div style={{
-        ...card,
-        maxWidth: isMobile ? "100%" : "400px"
-      }}>
+      <div
+        style={{
+          ...card,
+          maxWidth: isMobile ? "100%" : "400px",
+        }}
+      >
         <input
           name="name"
           placeholder="Fabric Name"
@@ -115,21 +114,25 @@ function AddFabric() {
 
       {/* QR RESULT */}
       {qr && (
-        <div style={{
-          ...qrCard,
-          width: isMobile ? "100%" : "350px",
-          margin: "30px auto"
-        }}>
+        <div
+          style={{
+            ...qrCard,
+            width: isMobile ? "100%" : "350px",
+            margin: "30px auto",
+          }}
+        >
           <h3>📦 QR Code Generated</h3>
 
-          <p><b>{roll}</b></p>
+          <p>
+            <b>{roll}</b>
+          </p>
 
           <img
             src={qr}
             alt="QR Code"
             style={{
               ...qrImg,
-              width: isMobile ? "160px" : "200px"
+              width: isMobile ? "160px" : "200px",
             }}
           />
 
@@ -138,7 +141,6 @@ function AddFabric() {
           </button>
         </div>
       )}
-
     </div>
   );
 }
@@ -149,14 +151,14 @@ const container = {
   padding: "20px",
   background: "#f8fafc",
   minHeight: "100vh",
-  color: "#0f172a"
+  color: "#0f172a",
 };
 
 const topbar = {
   display: "flex",
   alignItems: "center",
   gap: "10px",
-  marginBottom: "20px"
+  marginBottom: "20px",
 };
 
 const backBtn = {
@@ -165,7 +167,7 @@ const backBtn = {
   border: "none",
   borderRadius: "6px",
   cursor: "pointer",
-  color: "#fff"
+  color: "#fff",
 };
 
 const card = {
@@ -176,7 +178,7 @@ const card = {
   flexDirection: "column",
   gap: "12px",
   margin: "auto",
-  boxShadow: "0 5px 15px rgba(0,0,0,0.05)"
+  boxShadow: "0 5px 15px rgba(0,0,0,0.05)",
 };
 
 const input = {
@@ -185,7 +187,7 @@ const input = {
   border: "1px solid #e2e8f0",
   outline: "none",
   background: "#fff",
-  color: "#0f172a"
+  color: "#0f172a",
 };
 
 const btn = {
@@ -195,7 +197,7 @@ const btn = {
   borderRadius: "8px",
   fontWeight: "bold",
   cursor: "pointer",
-  color: "#fff"
+  color: "#fff",
 };
 
 const qrCard = {
@@ -203,11 +205,11 @@ const qrCard = {
   padding: "20px",
   borderRadius: "12px",
   textAlign: "center",
-  boxShadow: "0 5px 15px rgba(0,0,0,0.05)"
+  boxShadow: "0 5px 15px rgba(0,0,0,0.05)",
 };
 
 const qrImg = {
-  marginTop: "10px"
+  marginTop: "10px",
 };
 
 const printBtn = {
@@ -218,7 +220,7 @@ const printBtn = {
   borderRadius: "8px",
   cursor: "pointer",
   fontWeight: "bold",
-  color: "#fff"
+  color: "#fff",
 };
 
 export default AddFabric;
