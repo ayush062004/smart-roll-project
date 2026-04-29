@@ -1,9 +1,12 @@
+// ================= AdminRoute.jsx =================
 import { Navigate } from "react-router-dom";
 
 const AdminRoute = ({ children }) => {
-  const isAdmin = localStorage.getItem("admin");
+  const token = localStorage.getItem("adminToken");
 
-  return isAdmin ? children : <Navigate to="/adminlogin" />;
+  return token
+    ? children
+    : <Navigate to="/adminlogin" replace />;
 };
 
 export default AdminRoute;

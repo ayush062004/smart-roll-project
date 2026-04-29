@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -22,111 +22,144 @@ const AdminDashboard = () => {
     password: "",
   });
 
+  const token = localStorage.getItem("adminToken");
+
+  // ================= MOBILE RESIZE =================
   useEffect(() => {
     const resize = () => setIsMobile(window.innerWidth < 768);
+
     window.addEventListener("resize", resize);
     return () => window.removeEventListener("resize", resize);
-  }, [navigate]);
+  }, []);
 
-  useEffect(() => {
-    const isAdmin = localStorage.getItem("admin");
-
-    if (!isAdmin) {
-      navigate("/adminlogin");
-    } else {
-      fetchCuts();
-      fetchStats();
-      fetchUsers();
-      fetchInventory();
-    }
-  }, [navigate]);
-
-  const fetchCuts = async () => {
+  // ================= FETCH FUNCTIONS =================
+  const fetchCuts = useCallback(async () => {
     try {
       const res = await axios.get(`${API}/api/admin/cuts`, {
-        withCredentials: true,
+        headers: { Authorization: `Bearer ${token}` },
       });
       setCuts(res.data);
     } catch {}
-  };
+  }, [token]);
 
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       const res = await axios.get(`${API}/api/admin/dashboard-stats`, {
-        withCredentials: true,
+        headers: { Authorization: `Bearer ${token}` },
       });
       setStats(res.data);
     } catch {}
-  };
+  }, [token]);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       const res = await axios.get(`${API}/api/admin/users`, {
-        withCredentials: true,
+        headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(res.data);
     } catch {}
-  };
+  }, [token]);
 
-  const fetchInventory = async () => {
+  const fetchInventory = useCallback(async () => {
     try {
       const res = await axios.get(`${API}/api/admin/inventory`, {
-        withCredentials: true,
+        headers: { Authorization: `Bearer ${token}` },
       });
       setInventory(res.data);
     } catch {}
-  };
+  }, [token]);
+
+  // ================= AUTH CHECK =================
+  useEffect(() => {
+    if (!token) {
+      navigate("/adminlogin");
+      return;
+    }
+
+    fetchCuts();
+    fetchStats();
+    fetchUsers();
+    fetchInventory();
+  }, [
+    token,
+    navigate,
+    fetchCuts,
+    fetchStats,
+    fetchUsers,
+    fetchInventory,
+  ]);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
   };
 
+  // ================= CREATE USER =================
   const createUser = async (e) => {
     e.preventDefault();
 
     try {
-      await axios.post(`${API}/api/admin/create-user`, form, {
-        withCredentials: true,
-      });
+      await axios.post(
+        `${API}/api/admin/create-user`,
+        form,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       alert("User Created ✅");
-      setForm({ name: "", email: "", password: "" });
+
+      setForm({
+        name: "",
+        email: "",
+        password: "",
+      });
+
       fetchUsers();
     } catch {
       alert("Error ❌");
     }
   };
 
+  // ================= DELETE USER =================
   const deleteUser = async (id) => {
-    if (!window.confirm("Delete this user?")) return;
+    if (!window.confirm("Delete user?")) return;
 
     await axios.delete(`${API}/api/admin/user/${id}`, {
-      withCredentials: true,
+      headers: { Authorization: `Bearer ${token}` },
     });
 
     fetchUsers();
   };
 
+  // ================= DELETE INVENTORY =================
   const handleInvDelete = async (id) => {
     if (!window.confirm("Delete fabric?")) return;
 
     await axios.delete(`${API}/api/admin/inventory/${id}`, {
-      withCredentials: true,
+      headers: { Authorization: `Bearer ${token}` },
     });
 
     fetchInventory();
   };
 
+  // ================= ADD LENGTH =================
   const handleAddLength = async (item) => {
-    const value = prompt("Enter length:");
+    const value = prompt("Enter length");
+
     if (!value || isNaN(value)) return;
 
-    const newLength = Number(item.availableLength) + Number(value);
+    const newLength =
+      Number(item.availableLength) + Number(value);
 
     await axios.put(
       `${API}/api/admin/inventory/${item._id}`,
       { availableLength: newLength },
-      { withCredentials: true }
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
     );
 
     fetchInventory();
@@ -147,7 +180,7 @@ const AdminDashboard = () => {
           >
             ☰
           </button>
-          <h3 style={{ margin: 0 }}>Admin</h3>
+          <h3>Admin</h3>
         </div>
       )}
 
@@ -158,34 +191,52 @@ const AdminDashboard = () => {
         />
       )}
 
+      {/* SIDEBAR */}
       <div
         style={{
           ...styles.sidebar,
-          left: isMobile ? (sidebarOpen ? "0" : "-260px") : "0",
+          left: isMobile
+            ? sidebarOpen
+              ? "0"
+              : "-260px"
+            : "0",
         }}
       >
-        <h2 style={{ color: "#3b82f6" }}>🧵 FabricSys</h2>
+        <h2 style={{ color: "#2563eb" }}>🧵 FabricSys</h2>
 
-        <button onClick={() => changeTab("cuts")} style={styles.btn}>
+        <button
+          style={styles.btn}
+          onClick={() => changeTab("cuts")}
+        >
           📊 Cuts
         </button>
 
-        <button onClick={() => changeTab("inventory")} style={styles.btn}>
+        <button
+          style={styles.btn}
+          onClick={() => changeTab("inventory")}
+        >
           📦 Inventory
         </button>
 
-        <button onClick={() => changeTab("create")} style={styles.btn}>
-          ➕ Create
+        <button
+          style={styles.btn}
+          onClick={() => changeTab("users")}
+        >
+          👥 Users
         </button>
 
-        <button onClick={() => changeTab("users")} style={styles.btn}>
-          👥 Users
+        <button
+          style={styles.btn}
+          onClick={() => changeTab("create")}
+        >
+          ➕ Create User
         </button>
 
         <button
           style={styles.logout}
           onClick={() => {
-            localStorage.clear();
+            localStorage.removeItem("adminToken");
+            localStorage.removeItem("adminUser");
             navigate("/adminlogin");
           }}
         >
@@ -193,6 +244,7 @@ const AdminDashboard = () => {
         </button>
       </div>
 
+      {/* MAIN */}
       <div
         style={{
           ...styles.main,
@@ -211,62 +263,74 @@ const AdminDashboard = () => {
         >
           <Card title="Total" value={stats?.totalRolls || 0} />
           <Card title="Used" value={stats?.usedRolls || 0} />
-          <Card title="Available" value={stats?.availableRolls || 0} />
+          <Card
+            title="Available"
+            value={stats?.availableRolls || 0}
+          />
           <Card title="Damaged" value={stats?.damaged || 0} />
         </div>
 
+        {/* CUTS */}
         {activeTab === "cuts" && (
           <TableWrapper title="Cut History">
             <thead>
               <tr>
-                <th>Roll No</th>
-                <th>Cut Length</th>
-                <th>Remaining</th>
+                <th>Roll</th>
+                <th>Cut</th>
+                <th>Remain</th>
                 <th>Date</th>
               </tr>
             </thead>
+
             <tbody>
               {cuts.map((c) => (
                 <tr key={c._id}>
                   <td>{c.rollNumber}</td>
                   <td>{c.cutLength}</td>
                   <td>{c.remainingLength}</td>
-                  <td>{new Date(c.createdAt).toLocaleString()}</td>
+                  <td>
+                    {new Date(c.createdAt).toLocaleString()}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </TableWrapper>
         )}
 
+        {/* INVENTORY */}
         {activeTab === "inventory" && (
           <TableWrapper title="Inventory">
             <thead>
               <tr>
-                <th>Roll No</th>
+                <th>Roll</th>
                 <th>Name</th>
                 <th>Length</th>
                 <th>Action</th>
               </tr>
             </thead>
+
             <tbody>
               {inventory.map((i) => (
                 <tr key={i._id}>
                   <td>{i.rollNumber}</td>
                   <td>{i.name}</td>
                   <td>{i.availableLength}</td>
+
                   <td>
                     <button
                       style={styles.smallBtn}
                       onClick={() => handleAddLength(i)}
                     >
-                      ＋
+                      Add
                     </button>
 
                     <button
                       style={styles.deleteBtn}
-                      onClick={() => handleInvDelete(i._id)}
+                      onClick={() =>
+                        handleInvDelete(i._id)
+                      }
                     >
-                      🗑
+                      Delete
                     </button>
                   </td>
                 </tr>
@@ -275,6 +339,7 @@ const AdminDashboard = () => {
           </TableWrapper>
         )}
 
+        {/* USERS */}
         {activeTab === "users" && (
           <TableWrapper title="Users">
             <thead>
@@ -284,6 +349,7 @@ const AdminDashboard = () => {
                 <th>Action</th>
               </tr>
             </thead>
+
             <tbody>
               {users.map((u) => (
                 <tr key={u._id}>
@@ -303,14 +369,19 @@ const AdminDashboard = () => {
           </TableWrapper>
         )}
 
+        {/* CREATE USER */}
         {activeTab === "create" && (
           <div style={styles.card}>
             <h3>Create User</h3>
 
-            <form onSubmit={createUser} style={styles.form}>
+            <form
+              onSubmit={createUser}
+              style={styles.form}
+            >
               <input
                 name="name"
                 placeholder="Name"
+                value={form.name}
                 onChange={handleChange}
                 style={styles.input}
               />
@@ -318,6 +389,7 @@ const AdminDashboard = () => {
               <input
                 name="email"
                 placeholder="Email"
+                value={form.email}
                 onChange={handleChange}
                 style={styles.input}
               />
@@ -325,11 +397,14 @@ const AdminDashboard = () => {
               <input
                 name="password"
                 placeholder="Password"
+                value={form.password}
                 onChange={handleChange}
                 style={styles.input}
               />
 
-              <button style={styles.button}>Create</button>
+              <button style={styles.button}>
+                Create
+              </button>
             </form>
           </div>
         )}
@@ -357,113 +432,101 @@ const Card = ({ title, value }) => (
 const styles = {
   container: {
     display: "flex",
-    background: "#f8fafc",
     minHeight: "100vh",
-    color: "#0f172a",
+    background: "#f8fafc",
   },
+
   sidebar: {
     width: "250px",
     background: "#fff",
     padding: "20px",
     position: "fixed",
     top: 0,
-    left: 0,
     height: "100%",
-    zIndex: 2000,
     transition: "0.3s",
     boxShadow: "2px 0 10px rgba(0,0,0,0.08)",
     display: "flex",
     flexDirection: "column",
+    gap: "10px",
+    zIndex: 2000,
   },
-  overlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    background: "rgba(0,0,0,0.4)",
-    zIndex: 1500,
-  },
+
   main: {
     flex: 1,
     padding: "20px",
     marginTop: "70px",
   },
+
   btn: {
     padding: "10px",
-    marginTop: "10px",
     border: "none",
-    borderRadius: "6px",
-    background: "#e2e8f0",
+    borderRadius: "8px",
     cursor: "pointer",
-    textAlign: "left",
   },
+
   logout: {
     marginTop: "auto",
     padding: "10px",
     border: "none",
-    borderRadius: "6px",
+    borderRadius: "8px",
     background: "#ef4444",
     color: "#fff",
-    cursor: "pointer",
   },
+
   cards: {
     display: "grid",
     gap: "15px",
     marginTop: "20px",
   },
+
   stat: {
     background: "#fff",
     padding: "15px",
     borderRadius: "10px",
     textAlign: "center",
-    boxShadow: "0 5px 15px rgba(0,0,0,0.05)",
   },
+
   card: {
     background: "#fff",
     padding: "15px",
     borderRadius: "10px",
     marginTop: "20px",
-    boxShadow: "0 5px 15px rgba(0,0,0,0.05)",
   },
+
   table: {
     width: "100%",
-    borderCollapse: "collapse",
   },
+
   form: {
     display: "flex",
     flexDirection: "column",
     gap: "10px",
   },
+
   input: {
     padding: "10px",
-    border: "1px solid #e2e8f0",
-    borderRadius: "6px",
   },
+
   button: {
     padding: "10px",
-    border: "none",
-    borderRadius: "6px",
-    background: "#3b82f6",
+    background: "#2563eb",
     color: "#fff",
-    fontWeight: "bold",
-    cursor: "pointer",
+    border: "none",
+    borderRadius: "8px",
   },
+
   smallBtn: {
     marginRight: "8px",
-    border: "none",
-    padding: "6px 10px",
-    borderRadius: "6px",
-    cursor: "pointer",
   },
+
   deleteBtn: {
-    border: "none",
-    padding: "6px 10px",
-    borderRadius: "6px",
-    cursor: "pointer",
     background: "#ef4444",
     color: "#fff",
+    border: "none",
+    padding: "6px 10px",
+    borderRadius: "6px",
   },
+
   mobileTop: {
     position: "fixed",
     top: 0,
@@ -471,18 +534,24 @@ const styles = {
     width: "100%",
     height: "60px",
     background: "#fff",
-    zIndex: 3000,
     display: "flex",
     alignItems: "center",
     gap: "15px",
     padding: "0 15px",
-    boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+    zIndex: 3000,
   },
+
   menuBtn: {
-    background: "none",
     border: "none",
-    fontSize: "22px",
-    cursor: "pointer",
+    background: "none",
+    fontSize: "24px",
+  },
+
+  overlay: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.3)",
+    zIndex: 1500,
   },
 };
 
