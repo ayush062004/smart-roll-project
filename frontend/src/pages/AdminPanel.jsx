@@ -229,10 +229,10 @@ const Status = ({ type }) => {
 /* 🎨 BRIGHT THEME */
 
 const layout = 
-  display: "flex",
-  background: "#f8fafc",
-  color: "#0f172a",
-  minHeight: "100vh"
+  display:"flex",
+  background:"#f8fafc",
+  color:"#0f172a",
+  minHeight:"100vh"
 };
 
 const sidebar = {
