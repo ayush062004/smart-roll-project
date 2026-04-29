@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
-
   const API = "https://smart-roll-backend.onrender.com";
 
   const [form, setForm] = useState({
@@ -16,6 +15,7 @@ const Login = () => {
   const [forgotEmail, setForgotEmail] = useState("");
   const [showForgot, setShowForgot] = useState(false);
 
+  // ✅ already logged in
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -31,7 +31,7 @@ const Login = () => {
     });
   };
 
-  // ================= LOGIN =================
+  // ✅ LOGIN
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -41,7 +41,7 @@ const Login = () => {
         form
       );
 
-      // 🔥 SAVE TOKEN
+      // ✅ SAVE TOKEN
       localStorage.setItem(
         "token",
         res.data.token
@@ -64,7 +64,7 @@ const Login = () => {
     }
   };
 
-  // =============== FORGOT PASSWORD ===============
+  // forgot password
   const handleForgotPassword = async (e) => {
     e.preventDefault();
 
@@ -93,7 +93,7 @@ const Login = () => {
   return (
     <div className="container-fluid min-vh-100 d-flex p-0 flex-column flex-md-row">
 
-      {/* LEFT SIDE */}
+      {/* LEFT */}
       <div
         className="col-12 col-md-6 d-flex flex-column justify-content-center align-items-center text-white"
         style={{
@@ -125,7 +125,7 @@ const Login = () => {
         </div>
       </div>
 
-      {/* RIGHT SIDE */}
+      {/* RIGHT */}
       <div
         className="col-12 col-md-6 d-flex align-items-center justify-content-center"
         style={{
@@ -210,9 +210,7 @@ const Login = () => {
                 <button
                   type="button"
                   className="btn btn-outline-secondary w-100"
-                  onClick={() =>
-                    setShowForgot(false)
-                  }
+                  onClick={() => setShowForgot(false)}
                 >
                   Back
                 </button>
@@ -265,7 +263,6 @@ const Login = () => {
           color:#64748b !important;
         }
       `}</style>
-
     </div>
   );
 };

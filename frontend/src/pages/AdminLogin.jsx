@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaGithub, FaWhatsapp, FaTwitter } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,15 @@ const AdminLogin = () => {
     password: "",
   });
 
+  // ✅ already logged in check
+  useEffect(() => {
+    const token = localStorage.getItem("adminToken");
+
+    if (token) {
+      navigate("/adminDashboard");
+    }
+  }, [navigate]);
+
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -21,6 +30,7 @@ const AdminLogin = () => {
     });
   };
 
+  // ✅ LOGIN
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -30,14 +40,14 @@ const AdminLogin = () => {
         form
       );
 
-      // 🔥 SAVE TOKEN
+      // ✅ SAVE TOKEN
       localStorage.setItem(
         "adminToken",
         res.data.token
       );
 
       localStorage.setItem(
-        "admin",
+        "adminUser",
         JSON.stringify(res.data.user)
       );
 
@@ -56,7 +66,7 @@ const AdminLogin = () => {
   return (
     <div className="container-fluid min-vh-100 d-flex p-0 flex-column flex-md-row">
 
-      {/* LEFT SIDE */}
+      {/* LEFT */}
       <div
         className="col-12 col-md-6 d-flex flex-column justify-content-center align-items-center text-white"
         style={{
@@ -85,7 +95,7 @@ const AdminLogin = () => {
         </div>
       </div>
 
-      {/* RIGHT SIDE */}
+      {/* RIGHT */}
       <div
         className="col-12 col-md-6 d-flex align-items-center justify-content-center"
         style={{
