@@ -7,7 +7,9 @@ exports.login = async (req, res) => {
     let { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ msg: "Email & Password required ❌" });
+      return res.status(400).json({
+        msg: "Email & Password required ❌"
+      });
     }
 
     email = email.toLowerCase();
@@ -15,47 +17,53 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({ msg: "User not found ❌" });
+      return res.status(404).json({
+        msg: "User not found ❌"
+      });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(
+      password,
+      user.password
+    );
 
     if (!isMatch) {
-      return res.status(400).json({ msg: "Invalid credentials ❌" });
+      return res.status(400).json({
+        msg: "Invalid credentials ❌"
+      });
     }
 
     const token = jwt.sign(
-      { id: user._id, role: user.role },
+      {
+        id: user._id,
+        role: user.role
+      },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
-    res.cookie("token", token, {
-  httpOnly: true,
-  secure: true,
-  sameSite: "none",
-  path: "/",
-  domain: "smart-roll-backend.onrender.com",
-  maxAge: 24 * 60 * 60 * 1000
-});
     return res.status(200).json({
-      msg: "Login successful ✅"
+      msg: "Login successful ✅",
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
     });
 
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ msg: "Server error ❌" });
+
+    return res.status(500).json({
+      msg: "Server error ❌"
+    });
   }
 };
 
 exports.logout = (req, res) => {
-  res.clearCookie("token", {
-  httpOnly: true,
-  secure: true,
-  sameSite: "none",
-  path: "/",
-  domain: "smart-roll-backend.onrender.com"
-});
-
-  return res.json({ msg: "Logout successful ✅" });
+  return res.json({
+    msg: "Logout successful ✅"
+  });
 };

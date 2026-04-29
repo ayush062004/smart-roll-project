@@ -1,51 +1,68 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
-const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const adminRoutes = require("./routes/adminRoutes");
 
-
-
-// 🔐 Load env variables
+// 🔐 Load env
 dotenv.config();
 
 // 🔌 Connect DB
 connectDB();
 
-// 🚀 Initialize app
+// 🚀 Init App
 const app = express();
+
+// 🔥 Trust proxy (Render)
 app.set("trust proxy", 1);
-// 🌐 CORS (frontend connect)
+
+// ==============================
+// MIDDLEWARES
+// ==============================
+
+// JSON
+app.use(express.json());
+
+// 🌐 CORS
 app.use(cors({
-  origin: "https://smart-roll-project.vercel.app",
-  credentials: true
+  origin: [
+    "http://localhost:3000",
+    "https://smart-roll-project.vercel.app"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-// 📦 Middlewares
-app.use(express.json());
-app.use(cookieParser());
+// ==============================
+// TEST ROUTE
+// ==============================
 
-
-// 🧪 Test route (optional)
 app.get("/", (req, res) => {
   res.send("API Running 🚀");
 });
 
-// 🔗 Routes
+// ==============================
+// ROUTES
+// ==============================
+
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/fabric", require("./routes/fabricRoutes"));
 app.use("/api/admin", require("./routes/adminRoutes"));
 
+// ==============================
+// ERROR HANDLER
+// ==============================
 
-
-// ⚠️ Global error handler (optional but good)
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ msg: "Something went wrong" });
+  res.status(500).json({
+    msg: "Something went wrong ❌"
+  });
 });
 
-// 🎯 Start server
+// ==============================
+// SERVER START
+// ==============================
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

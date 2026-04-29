@@ -28,19 +28,30 @@ function AddFabric() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async () => {
-    try {
-      const res = await axios.post(`${API}/api/fabric/add`, form);
+ const handleSubmit = async () => {
+  try {
+    const token = localStorage.getItem("token");
 
-      setQr(res.data.fabric.qrCode);
-      setRoll(res.data.fabric.rollNumber);
+    const res = await axios.post(
+      `${API}/api/fabric/add`,
+      form,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
 
-      alert("Fabric Added ✅");
-    } catch (err) {
-      console.error(err);
-      alert("Error ❌");
-    }
-  };
+    setQr(res.data.fabric.qrCode);
+    setRoll(res.data.fabric.rollNumber);
+
+    alert("Fabric Added ✅");
+
+  } catch (err) {
+    console.error(err.response?.data || err.message);
+    alert(err.response?.data?.msg || "Unauthorized ❌");
+  }
+};
 
   const handlePrint = () => {
     const printWindow = window.open("", "_blank");

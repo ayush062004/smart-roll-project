@@ -9,33 +9,52 @@ exports.adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const admin = await User.findOne({ email, role: "admin" });
-    if (!admin) return res.status(400).json({ msg: "Admin not found ❌" });
+    const admin = await User.findOne({
+      email,
+      role: "admin"
+    });
 
-    const isMatch = await bcrypt.compare(password, admin.password);
-    if (!isMatch) return res.status(400).json({ msg: "Wrong password ❌" });
+    if (!admin) {
+      return res.status(400).json({
+        msg: "Admin not found ❌"
+      });
+    }
 
-    // 🔥 TOKEN (role add kiya)
+    const isMatch = await bcrypt.compare(
+      password,
+      admin.password
+    );
+
+    if (!isMatch) {
+      return res.status(400).json({
+        msg: "Wrong password ❌"
+      });
+    }
+
     const token = jwt.sign(
-      { _id: admin._id, role: admin.role },
+      {
+        id: admin._id,
+        role: admin.role
+      },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
-    // 🔥 COOKIE (IMPORTANT)
-    res.cookie("adminToken", token, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: false,
-    });
-
-    res.json({
+    return res.status(200).json({
       msg: "Admin login success ✅",
-      user: admin,
+      token,
+      user: {
+        id: admin._id,
+        name: admin.name,
+        email: admin.email,
+        role: admin.role
+      }
     });
 
   } catch (err) {
-    res.status(500).json({ msg: err.message });
+    return res.status(500).json({
+      msg: err.message
+    });
   }
 };
 

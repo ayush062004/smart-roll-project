@@ -15,31 +15,47 @@ const AdminLogin = () => {
   });
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      await axios.post(
+      const res = await axios.post(
         `${API}/api/admin/login`,
-        form,
-        { withCredentials: true }
+        form
       );
 
-      localStorage.setItem("admin", "true");
+      // 🔥 SAVE TOKEN
+      localStorage.setItem(
+        "adminToken",
+        res.data.token
+      );
+
+      localStorage.setItem(
+        "admin",
+        JSON.stringify(res.data.user)
+      );
 
       alert("Admin Login Successful ✅");
 
       navigate("/adminDashboard");
+
     } catch (err) {
-      alert(err.response?.data?.msg || "Admin Login failed ❌");
+      alert(
+        err.response?.data?.msg ||
+        "Admin Login Failed ❌"
+      );
     }
   };
 
   return (
     <div className="container-fluid min-vh-100 d-flex p-0 flex-column flex-md-row">
+
       {/* LEFT SIDE */}
       <div
         className="col-12 col-md-6 d-flex flex-column justify-content-center align-items-center text-white"
@@ -59,9 +75,12 @@ const AdminLogin = () => {
             textAlign: "center",
           }}
         >
-          <h1 className="fw-bold mb-3">Admin Control Panel ⚙️</h1>
+          <h1 className="fw-bold mb-3">
+            Admin Control Panel ⚙️
+          </h1>
+
           <p className="opacity-75">
-            Manage users, inventory & system controls securely.
+            Manage users, inventory & system securely.
           </p>
         </div>
       </div>
@@ -69,9 +88,13 @@ const AdminLogin = () => {
       {/* RIGHT SIDE */}
       <div
         className="col-12 col-md-6 d-flex align-items-center justify-content-center"
-        style={{ background: "#f8fafc", padding: "20px" }}
+        style={{
+          background: "#f8fafc",
+          padding: "20px",
+        }}
       >
         <div className="glass-card">
+
           <h2
             className="text-center mb-4 fw-bold"
             style={{ color: "#0f172a" }}
@@ -80,12 +103,13 @@ const AdminLogin = () => {
           </h2>
 
           <form onSubmit={handleLogin}>
+
             <div className="mb-3">
               <input
+                type="email"
                 name="email"
                 value={form.email}
                 onChange={handleChange}
-                type="email"
                 placeholder="Admin Email"
                 className="form-control custom-input"
                 required
@@ -94,19 +118,23 @@ const AdminLogin = () => {
 
             <div className="mb-3">
               <input
+                type="password"
                 name="password"
                 value={form.password}
                 onChange={handleChange}
-                type="password"
                 placeholder="Password"
                 className="form-control custom-input"
                 required
               />
             </div>
 
-            <button type="submit" className="custom-btn w-100 mb-3">
+            <button
+              type="submit"
+              className="custom-btn w-100 mb-3"
+            >
               Login as Admin
             </button>
+
           </form>
 
           <div
@@ -117,48 +145,49 @@ const AdminLogin = () => {
             <FaWhatsapp />
             <FaTwitter />
           </div>
+
         </div>
       </div>
 
       <style>{`
-        .glass-card {
-          width: 100%;
-          max-width: 400px;
-          padding: 30px;
-          border-radius: 15px;
-          background: #ffffff;
-          border: 1px solid #e2e8f0;
-          box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        .glass-card{
+          width:100%;
+          max-width:400px;
+          padding:30px;
+          border-radius:15px;
+          background:#ffffff;
+          border:1px solid #e2e8f0;
+          box-shadow:0 8px 25px rgba(0,0,0,0.08);
         }
 
-        .custom-input {
-          background: #f1f5f9 !important;
-          border: 1px solid #cbd5e1 !important;
-          color: #0f172a !important;
-          padding: 10px;
-          border-radius: 8px;
+        .custom-input{
+          background:#f1f5f9 !important;
+          border:1px solid #cbd5e1 !important;
+          color:#0f172a !important;
+          padding:10px;
+          border-radius:8px;
         }
 
-        .custom-input:focus {
-          border-color: #3b82f6 !important;
-          box-shadow: 0 0 8px rgba(59,130,246,0.4) !important;
+        .custom-input:focus{
+          border-color:#3b82f6 !important;
+          box-shadow:0 0 8px rgba(59,130,246,0.4) !important;
         }
 
-        .custom-btn {
-          background: #3b82f6;
-          border: none;
-          color: white;
-          padding: 10px;
-          border-radius: 8px;
-          font-weight: bold;
+        .custom-btn{
+          background:#3b82f6;
+          border:none;
+          color:white;
+          padding:10px;
+          border-radius:8px;
+          font-weight:bold;
         }
 
-        .custom-btn:hover {
-          background: #2563eb;
+        .custom-btn:hover{
+          background:#2563eb;
         }
 
-        input::placeholder {
-          color: #64748b !important;
+        input::placeholder{
+          color:#64748b !important;
         }
       `}</style>
     </div>

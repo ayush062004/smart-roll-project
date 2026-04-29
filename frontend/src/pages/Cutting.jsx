@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
-const token = localStorage.getItem("token");
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const API = "https://smart-roll-backend.onrender.com";
-
-// 🔥 VERY IMPORTANT
-axios.defaults.withCredentials = true;
 
 const Cutting = () => {
   const navigate = useNavigate();
@@ -16,31 +12,61 @@ const Cutting = () => {
   const [rolls, setRolls] = useState([]);
   const [history, setHistory] = useState([]);
 
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
+    if (!token) {
+      navigate("/");
+      return;
+    }
+
     fetchFabrics();
     fetchHistory();
   }, []);
 
+  // ================= FETCH FABRICS =================
   const fetchFabrics = async () => {
     try {
-      const res = await axios.get(`${API}/api/fabric`);
+      const res = await axios.get(
+        `${API}/api/fabric`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
       setRolls(res.data);
+
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
   };
 
+  // ================= FETCH HISTORY =================
   const fetchHistory = async () => {
     try {
-      const res = await axios.get(`${API}/api/fabric/cut-history`);
+      const res = await axios.get(
+        `${API}/api/fabric/cut-history`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
       setHistory(res.data);
+
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
   };
 
-  const selectedRoll = rolls.find((r) => r._id === roll);
+  const selectedRoll = rolls.find(
+    (r) => r._id === roll
+  );
 
+  // ================= CUT =================
   const handleCut = async () => {
     if (!roll || !cutAmount) {
       alert("Select roll first ❌");
@@ -48,16 +74,26 @@ const Cutting = () => {
     }
 
     try {
-      const res = await axios.post(`${API}/api/fabric/cut`, {
-        id: roll,
-        cutLength: Number(cutAmount),
-      });
+      const res = await axios.post(
+        `${API}/api/fabric/cut`,
+        {
+          id: roll,
+          cutLength: Number(cutAmount),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
 
       const updatedFabric = res.data;
 
       setRolls((prev) =>
         prev.map((item) =>
-          item._id === roll ? updatedFabric : item
+          item._id === roll
+            ? updatedFabric
+            : item
         )
       );
 
@@ -69,30 +105,47 @@ const Cutting = () => {
 
     } catch (err) {
       console.log(err.response?.data);
-      alert(err.response?.data?.msg || "Cut Failed ❌");
+
+      alert(
+        err.response?.data?.msg ||
+        "Cut Failed ❌"
+      );
     }
   };
 
   return (
     <div style={container}>
+
       <div style={topBar}>
-        <button onClick={() => navigate(-1)} style={backBtn}>
+        <button
+          onClick={() => navigate(-1)}
+          style={backBtn}
+        >
           ⬅ Back
         </button>
 
         <h2>✂️ Cutting Management</h2>
       </div>
 
+      {/* FORM */}
       <div style={card}>
+
         <select
           value={roll}
-          onChange={(e) => setRoll(e.target.value)}
+          onChange={(e) =>
+            setRoll(e.target.value)
+          }
           style={input}
         >
-          <option value="">Select Roll</option>
+          <option value="">
+            Select Roll
+          </option>
 
           {rolls.map((r) => (
-            <option key={r._id} value={r._id}>
+            <option
+              key={r._id}
+              value={r._id}
+            >
               {r.rollNumber} - {r.name}
             </option>
           ))}
@@ -102,26 +155,42 @@ const Cutting = () => {
           type="number"
           placeholder="Enter cut amount"
           value={cutAmount}
-          onChange={(e) => setCutAmount(e.target.value)}
+          onChange={(e) =>
+            setCutAmount(e.target.value)
+          }
           style={input}
         />
 
-        <button onClick={handleCut} style={btn}>
+        <button
+          onClick={handleCut}
+          style={btn}
+        >
           Cut Fabric
         </button>
+
       </div>
 
+      {/* PREVIEW */}
       {selectedRoll && (
         <div style={previewCard}>
-          <p>Total: {selectedRoll.totalLength}</p>
-          <p>Remaining: {selectedRoll.availableLength}</p>
+          <p>
+            Total: {selectedRoll.totalLength}
+          </p>
+
+          <p>
+            Remaining:
+            {selectedRoll.availableLength}
+          </p>
+
           <p>
             After Cut:{" "}
-            {selectedRoll.availableLength - Number(cutAmount || 0)}
+            {selectedRoll.availableLength -
+              Number(cutAmount || 0)}
           </p>
         </div>
       )}
 
+      {/* TABLE */}
       <div style={tableBox}>
         <h3>📜 Cutting History</h3>
 
@@ -142,15 +211,20 @@ const Cutting = () => {
                 <td>{item.rollNumber}</td>
                 <td>{item.name}</td>
                 <td>{item.cutLength}</td>
-                <td>{item.remainingLength}</td>
                 <td>
-                  {new Date(item.createdAt).toLocaleString()}
+                  {item.remainingLength}
+                </td>
+                <td>
+                  {new Date(
+                    item.createdAt
+                  ).toLocaleString()}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
     </div>
   );
 };
