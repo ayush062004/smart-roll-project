@@ -80,15 +80,57 @@ function AddFabric() {
   return (
     <div style={container}>
       {/* TOPBAR */}
-      <div style={topbar}>
-        <button onClick={() => navigate("/dashboard")} style={backBtn}>
-          ⬅ Back
-        </button>
+<div
+  style={{
+    display: "flex",
+    alignItems: isMobile ? "flex-start" : "center",
+    justifyContent: "space-between",
+    flexDirection: isMobile ? "column" : "row",
+    gap: "15px",
+    marginBottom: "30px",
+  }}
+>
+  <div>
+    <p
+      style={{
+        fontSize: "12px",
+        color: "#64748b",
+        margin: 0,
+        marginBottom: "4px",
+        letterSpacing: "1px",
+        textTransform: "uppercase",
+      }}
+    >
+      Inventory Management
+    </p>
 
-        <h2 style={{ margin: 0, fontSize: isMobile ? "18px" : "24px" }}>
-          ➕ Add Fabric
-        </h2>
-      </div>
+    <h1
+      style={{
+        margin: 0,
+        color: "#0f1f3d",
+        fontSize: isMobile ? "26px" : "34px",
+        fontWeight: "700",
+      }}
+    >
+      Add Fabric Roll
+    </h1>
+  </div>
+
+  <button
+    onClick={() => navigate("/dashboard")}
+    style={{
+      padding: "10px 18px",
+      background: "#0f1f3d",
+      border: "none",
+      borderRadius: "10px",
+      color: "#fff",
+      fontWeight: "600",
+      cursor: "pointer",
+    }}
+  >
+    ← Dashboard
+  </button>
+</div>
 
       {/* FORM */}
       <div
@@ -118,9 +160,16 @@ function AddFabric() {
           style={input}
         />
 
-        <button style={btn} onClick={handleSubmit}>
-          Add Fabric
-        </button>
+        <button
+  style={{
+    ...btn,
+    marginTop: "5px",
+    boxShadow: "0 4px 12px rgba(201,168,76,0.35)",
+  }}
+  onClick={handleSubmit}
+>
+  + Add Fabric Roll
+</button>
       </div>
 
       {/* QR RESULT */}
@@ -132,8 +181,14 @@ function AddFabric() {
             margin: "30px auto",
           }}
         >
-          <h3>📦 QR Code Generated</h3>
-
+         <h3
+  style={{
+    color: "#0f1f3d",
+    marginBottom: "10px",
+  }}
+>
+  Fabric QR Generated
+</h3>
           <p>
             <b>{roll}</b>
           </p>
@@ -157,80 +212,69 @@ function AddFabric() {
 }
 
 /* 🎨 BRIGHT THEME STYLES */
-
 const container = {
-  padding: "20px",
-  background: "#f8fafc",
+  padding: "30px",
+  background: "#f4f6f9",
   minHeight: "100vh",
-  color: "#0f172a",
-};
-
-const topbar = {
-  display: "flex",
-  alignItems: "center",
-  gap: "10px",
-  marginBottom: "20px",
-};
-
-const backBtn = {
-  padding: "6px 12px",
-  background: "#3b82f6",
-  border: "none",
-  borderRadius: "6px",
-  cursor: "pointer",
-  color: "#fff",
+  color: "#1a2a40",
 };
 
 const card = {
-  background: "#ffffff",
-  padding: "20px",
-  borderRadius: "12px",
+  background: "#fff",
+  padding: "30px",
+  borderRadius: "18px",
   display: "flex",
   flexDirection: "column",
-  gap: "12px",
+  gap: "15px",
   margin: "auto",
-  boxShadow: "0 5px 15px rgba(0,0,0,0.05)",
+  boxShadow: "0 8px 24px rgba(15,31,61,0.08)",
+  border: "1px solid #e2e8ef",
 };
 
 const input = {
-  padding: "10px",
-  borderRadius: "6px",
-  border: "1px solid #e2e8f0",
+  padding: "14px",
+  borderRadius: "10px",
+  border: "1px solid #dbe3ec",
   outline: "none",
   background: "#fff",
-  color: "#0f172a",
+  color: "#1a2a40",
+  fontSize: "14px",
+  transition: "0.2s",
 };
 
 const btn = {
-  padding: "10px",
-  background: "#3b82f6",
+  padding: "14px",
+  background: "#c9a84c",
   border: "none",
-  borderRadius: "8px",
-  fontWeight: "bold",
+  borderRadius: "10px",
+  fontWeight: "700",
   cursor: "pointer",
-  color: "#fff",
+  color: "#0f1f3d",
+  fontSize: "15px",
 };
 
 const qrCard = {
-  background: "#ffffff",
-  padding: "20px",
-  borderRadius: "12px",
+  background: "#fff",
+  padding: "25px",
+  borderRadius: "18px",
   textAlign: "center",
-  boxShadow: "0 5px 15px rgba(0,0,0,0.05)",
+  boxShadow: "0 8px 24px rgba(15,31,61,0.08)",
+  border: "1px solid #e2e8ef",
 };
 
 const qrImg = {
-  marginTop: "10px",
+  marginTop: "15px",
+  borderRadius: "10px",
 };
 
 const printBtn = {
-  marginTop: "15px",
-  padding: "10px 20px",
-  background: "#22c55e",
+  marginTop: "18px",
+  padding: "12px 22px",
+  background: "#16a34a",
   border: "none",
-  borderRadius: "8px",
+  borderRadius: "10px",
   cursor: "pointer",
-  fontWeight: "bold",
+  fontWeight: "700",
   color: "#fff",
 };
 
