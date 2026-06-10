@@ -76,20 +76,48 @@ const GlobalStyle = () => (
   }
 }
 
-/* ── Mobile topbar ── */
 .mobile-topbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 56px;
+  height: 60px;
   background: #0f1f3d;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   padding: 0 18px;
   z-index: 3000;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+}
+
+.mobile-topbar h3 {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.hamburger {
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.06);
+  color: #ffffff;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.hamburger:hover {
+  background: #c9a84c;
+  color: #0f1f3d;
+  border-color: #c9a84c;
 }
 
 /* ── Overlay ── */
