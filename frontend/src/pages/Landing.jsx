@@ -45,7 +45,23 @@ const Landing = () => {
           gap: "10px"
         }}
       >
-        <h2 style={styles.logo}>🧵 FabricSys</h2>
+        <div>
+  <p
+    style={{
+      margin: 0,
+      color: "#64748b",
+      fontSize: "11px",
+      letterSpacing: "1px",
+      textTransform: "uppercase",
+    }}
+  >
+    Textile ERP
+  </p>
+
+  <h2 style={styles.logo}>
+    FabricSys
+  </h2>
+</div>
 
         <div style={styles.navActions}>
           <button
@@ -83,14 +99,32 @@ const Landing = () => {
             textAlign: isMobile ? "center" : "left"
           }}
         >
-          <h1
-            style={{
-              ...styles.title,
-              fontSize: isMobile ? "30px" : "42px"
-            }}
-          >
-            Smart Fabric Management System
-          </h1>
+          <>
+  <p
+    style={{
+      color: "#c9a84c",
+      letterSpacing: "2px",
+      textTransform: "uppercase",
+      fontSize: "13px",
+      marginBottom: "10px",
+    }}
+  >
+    Smart Inventory Platform
+  </p>
+
+  <h1
+    style={{
+      ...styles.title,
+      fontSize: isMobile ? "34px" : "52px",
+      fontWeight: "700",
+      lineHeight: "1.2",
+    }}
+  >
+    Smart Fabric
+    <br />
+    Management System
+  </h1>
+</>
 
           <p style={styles.subtitle}>
             Track inventory, scan QR, manage cutting &
@@ -197,27 +231,29 @@ const Feature = ({ title, desc }) => (
 /* STYLES */
 const styles = {
   container: {
-    fontFamily: "sans-serif",
-    background: "#f8fafc",
-    minHeight: "100vh",
-    color: "#0f172a"
-  },
+  fontFamily: "sans-serif",
+  background: "#f4f6f9",
+  minHeight: "100vh",
+  color: "#1a2a40",
+},
 
   navbar: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    background: "#ffffff",
-    boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
-    position: "sticky",
-    top: 0,
-    zIndex: 100
-  },
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  background: "#ffffff",
+  borderBottom: "1px solid #e2e8ef",
+  boxShadow: "0 2px 12px rgba(15,31,61,0.05)",
+  position: "sticky",
+  top: 0,
+  zIndex: 100,
+},
 
-  logo: {
-    color: "#3b82f6",
-    margin: 0
-  },
+ logo: {
+  color: "#0f1f3d",
+  margin: 0,
+  fontWeight: "700",
+},
 
   navActions: {
     display: "flex",
@@ -225,21 +261,24 @@ const styles = {
   },
 
   loginBtn: {
-    padding: "8px 16px",
-    border: "none",
-    background: "#e2e8f0",
-    borderRadius: "6px",
-    cursor: "pointer"
-  },
+  padding: "10px 18px",
+  border: "1px solid #0f1f3d",
+  background: "#fff",
+  color: "#0f1f3d",
+  borderRadius: "10px",
+  cursor: "pointer",
+  fontWeight: "600",
+},
 
-  adminBtn: {
-    padding: "8px 16px",
-    border: "none",
-    background: "#3b82f6",
-    color: "#fff",
-    borderRadius: "6px",
-    cursor: "pointer"
-  },
+adminBtn: {
+  padding: "10px 18px",
+  border: "none",
+  background: "#0f1f3d",
+  color: "#fff",
+  borderRadius: "10px",
+  cursor: "pointer",
+  fontWeight: "600",
+},
 
   hero: {
     position: "relative",
@@ -260,7 +299,7 @@ const styles = {
     left: 0,
     width: "100%",
     height: "100%",
-    background: "rgba(0,0,0,0.6)"
+    background: "rgba(15,31,61,0.82)"
   },
 
   heroText: {
@@ -283,34 +322,38 @@ const styles = {
     gap: "10px"
   },
 
-  primaryBtn: {
-    padding: "12px 20px",
-    background: "#3b82f6",
-    color: "#fff",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontWeight: "bold"
-  },
+primaryBtn: {
+  padding: "14px 24px",
+  background: "#c9a84c",
+  color: "#0f1f3d",
+  border: "none",
+  borderRadius: "10px",
+  cursor: "pointer",
+  fontWeight: "700",
+  boxShadow: "0 4px 12px rgba(201,168,76,0.35)",
+},
 
-  secondaryBtn: {
-    padding: "12px 20px",
-    background: "#ffffff",
-    color: "#000",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer"
-  },
+secondaryBtn: {
+  padding: "14px 24px",
+  background: "#fff",
+  color: "#0f1f3d",
+  border: "1px solid #e2e8ef",
+  borderRadius: "10px",
+  cursor: "pointer",
+  fontWeight: "600",
+},
 
   heroCard: {
-    position: "relative",
-    zIndex: 1,
-    background: "rgba(255,255,255,0.9)",
-    color: "#000",
-    padding: "25px",
-    borderRadius: "12px",
-    maxWidth: "280px"
-  },
+  position: "relative",
+  zIndex: 1,
+  background: "#fff",
+  color: "#1a2a40",
+  padding: "28px",
+  borderRadius: "18px",
+  maxWidth: "300px",
+  border: "1px solid #e2e8ef",
+  boxShadow: "0 8px 24px rgba(15,31,61,0.08)",
+},
 
   section: {},
 
@@ -327,18 +370,20 @@ const styles = {
   },
 
   featureCard: {
-    background: "#ffffff",
-    padding: "20px",
-    borderRadius: "10px",
-    boxShadow: "0 5px 15px rgba(0,0,0,0.05)"
-  },
+  background: "#fff",
+  padding: "24px",
+  borderRadius: "18px",
+  border: "1px solid #e2e8ef",
+  boxShadow: "0 8px 24px rgba(15,31,61,0.08)",
+  transition: "0.3s",
+},
 
   cta: {
-    background: "#3b82f6",
-    color: "#fff",
-    textAlign: "center",
-    padding: "50px 20px"
-  },
+  background: "#0f1f3d",
+  color: "#fff",
+  textAlign: "center",
+  padding: "70px 20px",
+},
 
   footer: {
     textAlign: "center",
