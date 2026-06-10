@@ -187,14 +187,19 @@ const Cutting = () => {
 
         <table style={table}>
           <thead>
-            <tr>
-             <th style={{ padding: "12px", textAlign: "left" }}>Roll</th>
-<th style={{ padding: "12px", textAlign: "left" }}>Name</th>
-<th style={{ padding: "12px", textAlign: "left" }}>Cut</th>
-<th style={{ padding: "12px", textAlign: "left" }}>Remaining</th>
-<th style={{ padding: "12px", textAlign: "left" }}>Time</th>
-            </tr>
-          </thead>
+  <tr
+    style={{
+      background: "#0f1f3d",
+      color: "#fff",
+    }}
+  >
+    <th style={{ padding: "12px" }}>Roll</th>
+    <th style={{ padding: "12px" }}>Name</th>
+    <th style={{ padding: "12px" }}>Cut</th>
+    <th style={{ padding: "12px" }}>Remaining</th>
+    <th style={{ padding: "12px" }}>Time</th>
+  </tr>
+</thead>
 
           <tbody>
             {history.map((item) => (
@@ -230,19 +235,22 @@ const topBar = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
+  flexWrap: "wrap",
+  gap: "12px",
   marginBottom: "30px",
   paddingBottom: "18px",
   borderBottom: "1px solid #e2e8ef",
 };
 
 const backBtn = {
-  padding: "10px 18px",
+  padding: "10px 16px",
   background: "#0f1f3d",
   color: "#fff",
   border: "none",
   borderRadius: "10px",
   cursor: "pointer",
   fontWeight: "600",
+  minWidth: "140px",
 };
 
 const card = {
@@ -291,15 +299,17 @@ const previewCard = {
 const tableBox = {
   marginTop: "30px",
   background: "#fff",
-  padding: "20px",
+  padding: "15px",
   borderRadius: "18px",
   overflowX: "auto",
+  WebkitOverflowScrolling: "touch",
   border: "1px solid #e2e8ef",
   boxShadow: "0 8px 24px rgba(15,31,61,0.08)",
 };
 
 const table = {
   width: "100%",
+  minWidth: "700px",
   borderCollapse: "collapse",
 };
 
