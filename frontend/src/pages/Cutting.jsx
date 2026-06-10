@@ -105,15 +105,39 @@ const Cutting = () => {
   return (
     <div style={container}>
       <div style={topBar}>
-        <button
-          onClick={() => navigate(-1)}
-          style={backBtn}
-        >
-          ⬅ Back
-        </button>
+  <div>
+    <p
+      style={{
+        fontSize: "12px",
+        color: "#64748b",
+        margin: 0,
+        marginBottom: "4px",
+        letterSpacing: "1px",
+        textTransform: "uppercase",
+      }}
+    >
+      Inventory Management
+    </p>
 
-        <h2>✂️ Cutting Management</h2>
-      </div>
+    <h1
+      style={{
+        margin: 0,
+        color: "#0f1f3d",
+        fontSize: "34px",
+        fontWeight: "700",
+      }}
+    >
+      Cutting Management
+    </h1>
+  </div>
+
+  <button
+    onClick={() => navigate("/dashboard")}
+    style={backBtn}
+  >
+    ← Dashboard
+  </button>
+</div>
 
       {/* FORM */}
       <div style={card}>
@@ -164,11 +188,11 @@ const Cutting = () => {
         <table style={table}>
           <thead>
             <tr>
-              <th>Roll</th>
-              <th>Name</th>
-              <th>Cut</th>
-              <th>Remaining</th>
-              <th>Time</th>
+             <th style={{ padding: "12px", textAlign: "left" }}>Roll</th>
+<th style={{ padding: "12px", textAlign: "left" }}>Name</th>
+<th style={{ padding: "12px", textAlign: "left" }}>Cut</th>
+<th style={{ padding: "12px", textAlign: "left" }}>Remaining</th>
+<th style={{ padding: "12px", textAlign: "left" }}>Time</th>
             </tr>
           </thead>
 
@@ -196,67 +220,87 @@ const Cutting = () => {
 /* UI */
 
 const container = {
-  padding: "20px",
-  background: "#f1f5f9",
+  padding: "30px",
+  background: "#f4f6f9",
   minHeight: "100vh",
+  color: "#1a2a40",
 };
 
 const topBar = {
   display: "flex",
-  gap: "10px",
-  marginBottom: "20px",
+  justifyContent: "space-between",
   alignItems: "center",
+  marginBottom: "30px",
+  paddingBottom: "18px",
+  borderBottom: "1px solid #e2e8ef",
 };
 
 const backBtn = {
-  padding: "8px 12px",
-  background: "#2563eb",
-  color: "white",
+  padding: "10px 18px",
+  background: "#0f1f3d",
+  color: "#fff",
   border: "none",
-  borderRadius: "6px",
+  borderRadius: "10px",
   cursor: "pointer",
+  fontWeight: "600",
 };
 
 const card = {
-  background: "white",
-  padding: "20px",
-  borderRadius: "12px",
-  maxWidth: "500px",
+  background: "#fff",
+  padding: "30px",
+  borderRadius: "18px",
+  maxWidth: "600px",
+  border: "1px solid #e2e8ef",
+  boxShadow: "0 8px 24px rgba(15,31,61,0.08)",
 };
 
 const input = {
   width: "100%",
-  padding: "10px",
-  marginBottom: "10px",
+  padding: "14px",
+  marginBottom: "14px",
+  borderRadius: "10px",
+  border: "1px solid #dbe3ec",
+  background: "#fff",
+  color: "#1a2a40",
+  fontSize: "14px",
+  boxSizing: "border-box",
 };
 
 const btn = {
   width: "100%",
-  padding: "10px",
-  background: "#2563eb",
-  color: "white",
+  padding: "14px",
+  background: "#c9a84c",
+  color: "#0f1f3d",
   border: "none",
+  borderRadius: "10px",
   cursor: "pointer",
+  fontWeight: "700",
+  boxShadow: "0 4px 12px rgba(201,168,76,0.35)",
 };
 
 const previewCard = {
   marginTop: "20px",
-  background: "white",
-  padding: "15px",
-  borderRadius: "12px",
-  maxWidth: "500px",
+  background: "#fff",
+  padding: "20px",
+  borderRadius: "18px",
+  maxWidth: "600px",
+  border: "1px solid #e2e8ef",
+  boxShadow: "0 8px 24px rgba(15,31,61,0.08)",
 };
 
 const tableBox = {
-  marginTop: "20px",
-  background: "white",
-  padding: "15px",
-  borderRadius: "12px",
+  marginTop: "30px",
+  background: "#fff",
+  padding: "20px",
+  borderRadius: "18px",
   overflowX: "auto",
+  border: "1px solid #e2e8ef",
+  boxShadow: "0 8px 24px rgba(15,31,61,0.08)",
 };
 
 const table = {
   width: "100%",
+  borderCollapse: "collapse",
 };
 
 export default Cutting;
