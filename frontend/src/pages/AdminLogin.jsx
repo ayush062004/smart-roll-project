@@ -4,11 +4,7 @@ import React, {
   useEffect,
 } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {
-  FaGithub,
-  FaWhatsapp,
-  FaTwitter,
-} from "react-icons/fa";
+
 import {
   useNavigate,
 } from "react-router-dom";
@@ -107,8 +103,8 @@ const AdminLogin = () => {
       >
         <div
           style={{
-            background:
-              "rgba(0,0,0,0.5)",
+            
+              background: "rgba(15,31,61,0.82)",
             padding: "20px",
             borderRadius:
               "10px",
@@ -116,10 +112,24 @@ const AdminLogin = () => {
               "center",
           }}
         >
-          <h1 className="fw-bold mb-3">
-            Admin Control
-            Panel ⚙️
-          </h1>
+          <h1
+  style={{
+    color: "#ffffff",
+    fontWeight: "700",
+  }}
+>
+  Admin Control Panel
+</h1>
+
+<div
+  style={{
+    width: "60px",
+    height: "4px",
+    background: "#c9a84c",
+    margin: "12px auto",
+    borderRadius: "10px",
+  }}
+></div>
 
           <p className="opacity-75">
             Manage users,
@@ -139,9 +149,25 @@ const AdminLogin = () => {
         }}
       >
         <div className="glass-card">
-          <h2 className="text-center mb-4 fw-bold text-dark">
-            Admin Login
-          </h2>
+          <h2
+  className="text-center mb-1"
+  style={{
+    color: "#0f1f3d",
+    fontWeight: "700",
+  }}
+>
+  Welcome Admin
+</h2>
+
+<p
+  className="text-center mb-4"
+  style={{
+    color: "#64748b",
+    fontSize: "14px",
+  }}
+>
+  Login to Admin Control Panel
+</p>
 
           <form
             onSubmit={
@@ -158,7 +184,7 @@ const AdminLogin = () => {
                 onChange={
                   handleChange
                 }
-                placeholder="Admin Email"
+                placeholder="Enter Admin Email"
                 className="form-control custom-input"
                 required
               />
@@ -174,7 +200,7 @@ const AdminLogin = () => {
                 onChange={
                   handleChange
                 }
-                placeholder="Password"
+                placeholder="Enter Password"
                 className="form-control custom-input"
                 required
               />
@@ -185,37 +211,53 @@ const AdminLogin = () => {
             </button>
           </form>
 
-          <div className="d-flex justify-content-center gap-3 mt-3 fs-5">
-            <FaGithub />
-            <FaWhatsapp />
-            <FaTwitter />
-          </div>
+          
         </div>
       </div>
 
       <style>{`
-        .glass-card{
-          width:100%;
-          max-width:400px;
-          padding:30px;
-          border-radius:15px;
-          background:white;
-          box-shadow:0 8px 25px rgba(0,0,0,.08);
-        }
+       .glass-card{
+  width:100%;
+  max-width:420px;
+  padding:35px;
+  border-radius:18px;
+  background:#ffffff;
+  border:1px solid #e2e8ef;
+  box-shadow:0 8px 24px rgba(15,31,61,0.08);
+}
 
-        .custom-input{
-          background:#f1f5f9 !important;
-          border:1px solid #cbd5e1 !important;
-        }
+.custom-input{
+  background:"#f4f6f9" !important;
+  border:1px solid #dbe3ec !important;
+  color:#1a2a40 !important;
+  padding:12px !important;
+  border-radius:10px !important;
+}
 
-        .custom-btn{
-          background:#2563eb;
-          color:white;
-          border:none;
-          padding:10px;
-          border-radius:8px;
-          font-weight:bold;
-        }
+.custom-input:focus{
+  border-color:#c9a84c !important;
+  box-shadow:0 0 8px rgba(201,168,76,0.35) !important;
+}
+
+.custom-btn{
+  background:#c9a84c;
+  color:#0f1f3d;
+  border:none;
+  padding:12px;
+  border-radius:10px;
+  font-weight:700;
+  box-shadow:0 4px 12px rgba(201,168,76,0.35);
+  transition:.3s;
+}
+
+.custom-btn:hover{
+  background:#d4b15a;
+  transform:translateY(-1px);
+}
+
+input::placeholder{
+  color:#64748b !important;
+}
       `}</style>
     </div>
   );
