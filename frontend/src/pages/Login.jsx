@@ -95,7 +95,7 @@ const Login = () => {
       >
         <div
           style={{
-            background: "rgba(0,0,0,0.55)",
+            background:"rgba(15,31,61,0.82)",
             padding: "25px",
             borderRadius: "12px",
             textAlign: "center",
@@ -103,9 +103,24 @@ const Login = () => {
             maxWidth: "400px"
           }}
         >
-          <h1 className="fw-bold mb-3">
-            Smart Fabric System 🧵
-          </h1>
+          <h1
+  style={{
+    color: "#ffffff",
+    fontWeight: "700",
+  }}
+>
+  Smart Fabric System
+</h1>
+
+<div
+  style={{
+    width: "60px",
+    height: "4px",
+    background: "#c9a84c",
+    margin: "12px auto",
+    borderRadius: "10px",
+  }}
+></div>
 
           <p className="opacity-75">
             Manage fabric rolls & automate textile workflow efficiently.
@@ -125,9 +140,25 @@ const Login = () => {
 
           {!showForgot ? (
             <>
-              <h2 className="text-center mb-4 fw-bold text-dark">
-                Login
-              </h2>
+              <h2
+  className="text-center mb-1"
+  style={{
+    color: "#0f1f3d",
+    fontWeight: "700",
+  }}
+>
+  Welcome Back
+</h2>
+
+<p
+  className="text-center mb-4"
+  style={{
+    color: "#64748b",
+    fontSize: "14px",
+  }}
+>
+  Login to Smart Fabric System
+</p>
 
               <form onSubmit={handleSubmit}>
 
@@ -211,15 +242,15 @@ const Login = () => {
       </div>
 
       <style>{`
-        .glass-card{
-          width:100%;
-          max-width:400px;
-          padding:30px;
-          border-radius:16px;
-          background:#ffffff;
-          border:1px solid #e2e8f0;
-          box-shadow:0 10px 30px rgba(0,0,0,0.08);
-        }
+     .glass-card{
+  width:100%;
+  max-width:420px;
+  padding:35px;
+  border-radius:18px;
+  background:"#f4f6f9";
+  border:1px solid #e2e8ef;
+  box-shadow:0 8px 24px rgba(15,31,61,0.08);
+}
 
         .custom-input{
           background:#f8fafc !important;
@@ -229,19 +260,26 @@ const Login = () => {
           border-radius:8px;
         }
 
-        .custom-input:focus{
-          border-color:#3b82f6 !important;
-          box-shadow:0 0 6px rgba(59,130,246,0.4) !important;
-        }
+       .custom-input:focus{
+  border-color:#c9a84c !important;
+  box-shadow:0 0 8px rgba(201,168,76,0.35) !important;
+}
 
-        .custom-btn{
-          background:linear-gradient(135deg,#3b82f6,#0ea5e9);
-          border:none;
-          color:white;
-          padding:10px;
-          border-radius:8px;
-          font-weight:bold;
-        }
+.custom-btn{
+  background:#c9a84c;
+  border:none;
+  color:#0f1f3d;
+  padding:12px;
+  border-radius:10px;
+  font-weight:700;
+  box-shadow:0 4px 12px rgba(201,168,76,0.35);
+  transition:0.3s;
+}
+
+.custom-btn:hover{
+  transform:translateY(-1px);
+  background:#d4b15a;
+}
 
         .custom-btn:hover{
           opacity:0.9;
