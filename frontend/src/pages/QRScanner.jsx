@@ -109,31 +109,51 @@ const QRScanner = () => {
     <div style={styles.page}>
       {/* TOPBAR */}
       <div style={styles.topbar}>
-        <button
-          style={styles.backBtn}
-          onClick={() =>
-            navigate("/dashboard")
-          }
-        >
-          ← Back
-        </button>
+  <div>
+    <p
+      style={{
+        fontSize: "12px",
+        color: "#64748b",
+        margin: 0,
+        marginBottom: "4px",
+        letterSpacing: "1px",
+        textTransform: "uppercase",
+      }}
+    >
+      Inventory Management
+    </p>
 
-        <h2 style={{ margin: 0 }}>
-          📱 QR Scanner
-        </h2>
-      </div>
+    <h1
+      style={{
+        margin: 0,
+        color: "#0f1f3d",
+        fontSize: isMobile ? "26px" : "34px",
+        fontWeight: "700",
+      }}
+    >
+      QR Scanner
+    </h1>
+  </div>
 
-      {/* HERO */}
-      <div style={styles.hero}>
-        <h1 style={styles.heading}>
-          Smart Fabric Scanner
-        </h1>
+  <button
+    style={styles.backBtn}
+    onClick={() => navigate("/dashboard")}
+  >
+    ← Dashboard
+  </button>
+</div>
 
-        <p style={styles.sub}>
-          Scan roll QR and manage live
-          inventory instantly.
-        </p>
-      </div>
+<div style={styles.hero}>
+  <p
+    style={{
+      color: "#64748b",
+      marginTop: 0,
+      fontSize: "15px",
+    }}
+  >
+    Scan fabric rolls and manage inventory instantly.
+  </p>
+</div>
 
       {/* SCANNER */}
       <div style={styles.card}>
@@ -181,9 +201,15 @@ const QRScanner = () => {
       {/* RESULT */}
       {fabric && (
         <div style={styles.result}>
-          <h3 style={{ marginTop: 0 }}>
-            📦 Fabric Details
-          </h3>
+          <h3
+  style={{
+    marginTop: 0,
+    color: "#0f1f3d",
+    fontWeight: "700",
+  }}
+>
+  Fabric Details
+</h3>
 
           <div style={styles.grid}>
             <Info
@@ -273,93 +299,96 @@ const Feature = ({
 
 const styles = {
   page: {
-    minHeight: "100vh",
-    padding: "20px",
-    background:
-      "linear-gradient(135deg,#eff6ff,#f8fafc)",
-    color: "#0f172a",
-  },
+  minHeight: "100vh",
+  padding: "30px",
+  background: "#f4f6f9",
+  color: "#1a2a40",
+},
 
   topbar: {
-    display: "flex",
-    gap: "12px",
-    alignItems: "center",
-    flexWrap: "wrap",
-    marginBottom: "20px",
-  },
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: "12px",
+  marginBottom: "30px",
+  paddingBottom: "18px",
+  borderBottom: "1px solid #e2e8ef",
+},
 
-  backBtn: {
-    border: "none",
-    padding: "10px 16px",
-    borderRadius: "10px",
-    background: "#2563eb",
-    color: "#fff",
-    cursor: "pointer",
-    fontWeight: "bold",
-  },
+
+ backBtn: {
+  padding: "10px 18px",
+  background: "#0f1f3d",
+  border: "none",
+  borderRadius: "10px",
+  color: "#fff",
+  fontWeight: "600",
+  cursor: "pointer",
+},
 
   hero: {
-    textAlign: "center",
-    marginBottom: "25px",
-  },
+  textAlign: "center",
+  marginBottom: "30px",
+},
 
   heading: {
-    margin: 0,
-    fontSize: "32px",
-  },
+  margin: 0,
+  fontSize: "36px",
+  color: "#0f1f3d",
+  fontWeight: "700",
+},
+card: {
+  maxWidth: "550px",
+  margin: "0 auto",
+  background: "#fff",
+  padding: "30px",
+  borderRadius: "18px",
+  boxShadow: "0 8px 24px rgba(15,31,61,0.08)",
+  border: "1px solid #e2e8ef",
+},
 
   sub: {
     color: "#64748b",
     marginTop: "10px",
   },
 
-  card: {
-    maxWidth: "500px",
-    margin: "0 auto",
-    background: "#fff",
-    padding: "20px",
-    borderRadius: "20px",
-    boxShadow:
-      "0 10px 30px rgba(0,0,0,0.08)",
-  },
+  
 
   scanArea: {
-    border:
-      "2px dashed #3b82f6",
-    borderRadius: "18px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-    position: "relative",
-    background: "#f8fafc",
-  },
+  border: "2px dashed #c9a84c",
+  borderRadius: "16px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  overflow: "hidden",
+  position: "relative",
+  background: "#fafafa",
+},
 
   scanText: {
     color: "#64748b",
   },
 
   scanLine: {
-    position: "absolute",
-    top: 0,
-    width: "100%",
-    height: "3px",
-    background: "#3b82f6",
-    animation:
-      "moveLine 2s infinite",
-  },
+  position: "absolute",
+  top: 0,
+  width: "100%",
+  height: "3px",
+  background: "#c9a84c",
+},
 
   scanBtn: {
-    marginTop: "18px",
-    width: "100%",
-    border: "none",
-    padding: "12px",
-    borderRadius: "12px",
-    background: "#2563eb",
-    color: "#fff",
-    fontWeight: "bold",
-    cursor: "pointer",
-  },
+  marginTop: "18px",
+  width: "100%",
+  border: "none",
+  padding: "14px",
+  borderRadius: "10px",
+  background: "#c9a84c",
+  color: "#0f1f3d",
+  fontWeight: "700",
+  cursor: "pointer",
+  boxShadow: "0 4px 12px rgba(201,168,76,0.35)",
+},
 
   loading: {
     textAlign: "center",
@@ -368,14 +397,14 @@ const styles = {
   },
 
   result: {
-    maxWidth: "700px",
-    margin: "25px auto 0",
-    background: "#fff",
-    padding: "22px",
-    borderRadius: "20px",
-    boxShadow:
-      "0 10px 30px rgba(0,0,0,0.08)",
-  },
+  maxWidth: "800px",
+  margin: "30px auto 0",
+  background: "#fff",
+  padding: "25px",
+  borderRadius: "18px",
+  boxShadow: "0 8px 24px rgba(15,31,61,0.08)",
+  border: "1px solid #e2e8ef",
+},
 
   grid: {
     display: "grid",
@@ -386,10 +415,11 @@ const styles = {
   },
 
   infoCard: {
-    background: "#f8fafc",
-    padding: "12px",
-    borderRadius: "12px",
-  },
+  background: "#f8fafc",
+  padding: "14px",
+  borderRadius: "12px",
+  border: "1px solid #e2e8ef",
+},
 
   label: {
     display: "block",
@@ -398,16 +428,16 @@ const styles = {
   },
 
   cutBtn: {
-    marginTop: "18px",
-    width: "100%",
-    border: "none",
-    padding: "13px",
-    borderRadius: "12px",
-    background: "#ef4444",
-    color: "#fff",
-    fontWeight: "bold",
-    cursor: "pointer",
-  },
+  marginTop: "20px",
+  width: "100%",
+  border: "none",
+  padding: "14px",
+  borderRadius: "10px",
+  background: "#dc2626",
+  color: "#fff",
+  fontWeight: "700",
+  cursor: "pointer",
+},
 
   features: {
     display: "grid",
@@ -416,13 +446,13 @@ const styles = {
   },
 
   featureCard: {
-    background: "#fff",
-    padding: "18px",
-    borderRadius: "18px",
-    boxShadow:
-      "0 8px 20px rgba(0,0,0,0.05)",
-    textAlign: "center",
-  },
+  background: "#fff",
+  padding: "22px",
+  borderRadius: "18px",
+  boxShadow: "0 8px 24px rgba(15,31,61,0.08)",
+  border: "1px solid #e2e8ef",
+  textAlign: "center",
+},
 };
 
 export default QRScanner;
