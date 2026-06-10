@@ -56,8 +56,14 @@ const GlobalStyle = () => (
       overflow-y: auto;
       transition: transform 0.28s cubic-bezier(.4,0,.2,1);
     }
-    .sidebar.mobile-hidden {
-      transform: translateX(-100%);
+    /* Desktop: always visible */
+    @media (min-width: 768px) {
+      .sidebar { transform: translateX(0) !important; }
+    }
+    /* Mobile: hidden by default, shown only when open */
+    @media (max-width: 767px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.mobile-open { transform: translateX(0); }
     }
 
     /* ── Mobile topbar ── */
@@ -398,7 +404,7 @@ const Dashboard = () => {
         )}
 
         {/* ── SIDEBAR ── */}
-        <aside className={`sidebar${isMobile && !sidebarOpen ? " mobile-hidden" : ""}`}>
+        <aside className={`sidebar${isMobile && sidebarOpen ? " mobile-open" : ""}`}>
           <div className="sidebar-brand">
             <div className="brand-icon">🧵</div>
             <div>
