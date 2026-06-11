@@ -324,7 +324,7 @@ const AdminDashboard = () => {
     if (isMobile) setSidebarOpen(false);
   };
 
-  const tabAccent = { cuts: T.sky, inventory: T.gold, users: T.green, create: T.amber };
+
 
   return (
     <>
