@@ -42,7 +42,7 @@ const Styles = () => (
       .sidebar{transform:translateX(0)!important}
     }
     @media(max-width:767px){
-      .sidebar{transform:translateX(-100%)}
+      .sidebar{transform:translateX(-100%);padding-top:56px}
       .sidebar.mobile-open{transform:translateX(0)}
     }
     .sidebar-brand{
