@@ -8,9 +8,16 @@ const Login = () => {
   const API = "https://smart-roll-backend.onrender.com";
 
   const [form, setForm] = useState({
-    email: "",
-    password: ""
+    email: "ayush123@gmail.com",
+    password: "ayush"
   });
+
+  const fillTestCredentials = () => {
+    setForm({
+      email: "ayush123@gmail.com",
+      password: "ayush"
+    });
+  };
 
   const [forgotEmail, setForgotEmail] = useState("");
   const [showForgot, setShowForgot] = useState(false);
@@ -151,7 +158,7 @@ const Login = () => {
 </h2>
 
 <p
-  className="text-center mb-4"
+  className="text-center mb-3"
   style={{
     color: "#64748b",
     fontSize: "14px",
@@ -159,6 +166,74 @@ const Login = () => {
 >
   Login to Smart Fabric System
 </p>
+
+              {/* 🔑 Test Credentials Card */}
+              <div
+                style={{
+                  background: "rgba(201, 168, 76, 0.08)",
+                  border: "1px dashed #c9a84c",
+                  borderRadius: "10px",
+                  padding: "12px 14px",
+                  marginBottom: "18px",
+                  fontSize: "13px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <strong style={{ color: "#0f1f3d", display: "flex", alignItems: "center", gap: "6px" }}>
+                    <span>🔑</span> Test User Credentials
+                  </strong>
+                  <div style={{ display: "flex", gap: "6px" }}>
+                    <button
+                      type="button"
+                      onClick={fillTestCredentials}
+                      style={{
+                        border: "none",
+                        background: "#0f1f3d",
+                        color: "#c9a84c",
+                        padding: "4px 9px",
+                        borderRadius: "6px",
+                        fontSize: "11px",
+                        fontWeight: "600",
+                        cursor: "pointer",
+                      }}
+                    >
+                      ⚡ Quick Fill
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setForm({ email: "", password: "" })}
+                      style={{
+                        border: "1px solid #cbd5e1",
+                        background: "#ffffff",
+                        color: "#64748b",
+                        padding: "4px 8px",
+                        borderRadius: "6px",
+                        fontSize: "11px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Clear
+                    </button>
+                  </div>
+                </div>
+                <div style={{ color: "#334155", lineHeight: "1.6" }}>
+                  <div>
+                    <span style={{ color: "#64748b" }}>Email: </span>
+                    <strong style={{ fontFamily: "monospace", color: "#0f1f3d" }}>ayush123@gmail.com</strong>
+                  </div>
+                  <div>
+                    <span style={{ color: "#64748b" }}>Password: </span>
+                    <strong style={{ fontFamily: "monospace", color: "#0f1f3d" }}>ayush</strong>
+                  </div>
+                </div>
+              </div>
 
               <form onSubmit={handleSubmit}>
 
@@ -200,6 +275,27 @@ const Login = () => {
                 >
                   Forgot Password?
                 </button>
+
+                <div
+                  className="text-center mt-3 pt-3"
+                  style={{ borderTop: "1px solid #e2e8f0" }}
+                >
+                  <span style={{ fontSize: "13px", color: "#64748b" }}>
+                    Are you an Admin?{" "}
+                  </span>
+                  <button
+                    type="button"
+                    className="btn btn-link p-0 text-decoration-none"
+                    style={{
+                      fontSize: "13px",
+                      color: "#0f1f3d",
+                      fontWeight: "700",
+                    }}
+                    onClick={() => navigate("/adminlogin")}
+                  >
+                    Admin Login →
+                  </button>
+                </div>
 
               </form>
             </>

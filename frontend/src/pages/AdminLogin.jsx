@@ -16,11 +16,17 @@ const API =
 const AdminLogin = () => {
   const navigate = useNavigate();
 
-  const [form, setForm] =
-    useState({
-      email: "",
-      password: "",
+  const [form, setForm] = useState({
+    email: "admin@gmail.com",
+    password: "admin123",
+  });
+
+  const fillTestCredentials = () => {
+    setForm({
+      email: "admin@gmail.com",
+      password: "admin123",
     });
+  };
 
   // ✅ already login
   useEffect(() => {
@@ -160,7 +166,7 @@ const AdminLogin = () => {
 </h2>
 
 <p
-  className="text-center mb-4"
+  className="text-center mb-3"
   style={{
     color: "#64748b",
     fontSize: "14px",
@@ -168,6 +174,74 @@ const AdminLogin = () => {
 >
   Login to Admin Control Panel
 </p>
+
+          {/* 🛡️ Test Admin Credentials Card */}
+          <div
+            style={{
+              background: "rgba(201, 168, 76, 0.08)",
+              border: "1px dashed #c9a84c",
+              borderRadius: "10px",
+              padding: "12px 14px",
+              marginBottom: "18px",
+              fontSize: "13px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "8px",
+              }}
+            >
+              <strong style={{ color: "#0f1f3d", display: "flex", alignItems: "center", gap: "6px" }}>
+                <span>🛡️</span> Test Admin Credentials
+              </strong>
+              <div style={{ display: "flex", gap: "6px" }}>
+                <button
+                  type="button"
+                  onClick={fillTestCredentials}
+                  style={{
+                    border: "none",
+                    background: "#0f1f3d",
+                    color: "#c9a84c",
+                    padding: "4px 9px",
+                    borderRadius: "6px",
+                    fontSize: "11px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  ⚡ Quick Fill
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setForm({ email: "", password: "" })}
+                  style={{
+                    border: "1px solid #cbd5e1",
+                    background: "#ffffff",
+                    color: "#64748b",
+                    padding: "4px 8px",
+                    borderRadius: "6px",
+                    fontSize: "11px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Clear
+                </button>
+              </div>
+            </div>
+            <div style={{ color: "#334155", lineHeight: "1.6" }}>
+              <div>
+                <span style={{ color: "#64748b" }}>Email: </span>
+                <strong style={{ fontFamily: "monospace", color: "#0f1f3d" }}>admin@gmail.com</strong>
+              </div>
+              <div>
+                <span style={{ color: "#64748b" }}>Password: </span>
+                <strong style={{ fontFamily: "monospace", color: "#0f1f3d" }}>admin123</strong>
+              </div>
+            </div>
+          </div>
 
           <form
             onSubmit={
@@ -209,6 +283,27 @@ const AdminLogin = () => {
             <button className="custom-btn w-100 mb-3">
               Login as Admin
             </button>
+
+            <div
+              className="text-center mt-3 pt-3"
+              style={{ borderTop: "1px solid #e2e8f0" }}
+            >
+              <span style={{ fontSize: "13px", color: "#64748b" }}>
+                Staff or Regular User?{" "}
+              </span>
+              <button
+                type="button"
+                className="btn btn-link p-0 text-decoration-none"
+                style={{
+                  fontSize: "13px",
+                  color: "#0f1f3d",
+                  fontWeight: "700",
+                }}
+                onClick={() => navigate("/login")}
+              >
+                User Login →
+              </button>
+            </div>
           </form>
 
           

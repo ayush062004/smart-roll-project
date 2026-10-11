@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dasboard";
 import AddFabric from "./pages/AddFabric";
@@ -8,7 +7,6 @@ import Inventory from "./pages/Ineventory";
 import QRScanner from "./pages/QRScanner";
 import AdminLogin from "./pages/AdminLogin";
 import Cutting from "./pages/Cutting";
-
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminDashboard from "./pages/AdminDashboard";
 

@@ -7,7 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   BarChart,
-  Bar,
+  Bar,  
   XAxis,
   YAxis,
   CartesianGrid,
